@@ -5,233 +5,940 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Window Hero — Pricing Calculator</title>
 <style>
+  /* ── HEROHUB DESIGN SYSTEM ──────────────────────────────────────────────── */
   :root {
-    --navy: #0b1c35; --navy-mid: #122540; --navy-light: #1a3355;
-    --blue: #5b9bd5; --blue-light: #7ab3e0; --blue-pale: #daeaf7;
-    --grey: #7a92b0; --grey-light: #b8c8d8; --grey-pale: #eef3f8;
-    --white: #ffffff;
-    --border: rgba(91,155,213,0.2); --border-mid: rgba(91,155,213,0.35);
-    --radius: 10px; --radius-sm: 6px;
-    --success: #2d7d46; --success-bg: #e6f4ec;
-    --onsite: #854F0B; --onsite-bg: #FAEEDA;
-    --warn: #7a5500; --warn-bg: #fff8e6; --warn-border: #f0c040;
-    --danger: #a32d2d; --danger-bg: #fcebeb;
+    --hh-navy: #0b1c35;
+    --hh-blue: #5b9bd5;
+    --hh-blue-light: #7ab3e0;
+    --hh-blue-pale: #e8f2fb;
+    --hh-grey: #6b7a8d;
+    --hh-grey-light: #a0aec0;
+    --hh-grey-pale: #f7f8fa;
+
+    /* Light mode tokens */
+    --bg: #f0f2f5;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f7f8fa;
+    --bg-header: #ffffff;
+    --bg-input: #ffffff;
+    --bg-sidebar-active: #e8f2fb;
+    --text-primary: #0b1c35;
+    --text-secondary: #4a5568;
+    --text-muted: #6b7a8d;
+    --text-label: #8a9bb0;
+    --border: #e2e8f0;
+    --border-focus: #5b9bd5;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --radius-lg: 14px;
+
+    /* Semantic */
+    --success: #38a169; --success-bg: #f0fff4; --success-border: #c6f6d5;
+    --danger: #e53e3e; --danger-bg: #fff5f5; --danger-border: #fed7d7;
+    --warn: #d69e2e; --warn-bg: #fffff0; --warn-border: #faf089;
+    --onsite: #b7791f; --onsite-bg: #fefcbf; --onsite-border: #f6e05e;
+    --info-bg: #ebf8ff; --info-border: #bee3f8; --info-text: #2b6cb0;
   }
+
+  [data-theme="dark"] {
+    --bg: #0f1923;
+    --bg-card: #1a2535;
+    --bg-card-hover: #1f2d40;
+    --bg-header: #111d2e;
+    --bg-input: #1f2d40;
+    --bg-sidebar-active: rgba(91,155,213,0.15);
+    --text-primary: #e2e8f0;
+    --text-secondary: #a0aec0;
+    --text-muted: #718096;
+    --text-label: #4a5568;
+    --border: #2d3748;
+    --border-focus: #5b9bd5;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
+    --success-bg: #1a2e22; --success-border: #276749;
+    --danger-bg: #2d1515; --danger-border: #9b2c2c;
+    --warn-bg: #2d2600; --warn-border: #975a16;
+    --onsite-bg: #2d2000; --onsite-border: #975a16; --onsite: #f6ad55;
+    --info-bg: #1a2840; --info-border: #2b4c7e; --info-text: #90cdf4;
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f4f8; color: var(--navy); min-height: 100vh; }
 
-  /* LOGIN SCREEN */
-  .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--navy); padding: 1rem; }
-  .login-card { background: white; border-radius: 16px; padding: 2.5rem 2rem; width: 100%; max-width: 400px; }
-  .login-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; }
-  .login-logo-icon { width: 40px; height: 40px; background: var(--blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  /* ── LOGIN ──────────────────────────────────────────────────────────────── */
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--hh-navy);
+    padding: 1rem;
+  }
+
+  .login-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.75rem 1.75rem;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+
+  .login-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.75rem;
+  }
+
+  .login-logo-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--hh-navy);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .login-logo-icon svg { fill: white; }
-  .login-logo-text { font-size: 20px; font-weight: 700; color: var(--navy); }
-  .login-logo-sub { font-size: 12px; color: var(--grey); margin-top: 1px; }
-  .login-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: var(--grey); margin-bottom: 6px; display: block; }
-  .login-select { width: 100%; height: 44px; border: 1.5px solid var(--border-mid); border-radius: var(--radius-sm); padding: 0 12px; font-size: 14px; color: var(--navy); outline: none; margin-bottom: 16px; background: white; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a92b0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
-  .login-select:focus { border-color: var(--blue); }
-  .pin-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
-  .pin-dot { width: 52px; height: 56px; border: 1.5px solid var(--border-mid); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: var(--navy); letter-spacing: 2px; transition: border-color 0.15s; }
-  .pin-dot.filled { border-color: var(--blue); background: var(--blue-pale); }
-  .pin-dot.error { border-color: var(--danger); background: var(--danger-bg); animation: shake 0.3s; }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
-  .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
-  .numpad-btn { height: 52px; border: 1px solid var(--border-mid); background: white; border-radius: var(--radius-sm); font-size: 20px; font-weight: 500; color: var(--navy); cursor: pointer; transition: background 0.1s; }
-  .numpad-btn:hover { background: var(--blue-pale); }
-  .numpad-btn:active { transform: scale(0.96); }
-  .numpad-btn.del { font-size: 16px; color: var(--grey); }
-  .numpad-btn.wide { grid-column: 1 / -1; background: var(--navy); color: white; font-size: 15px; font-weight: 600; border-color: var(--navy); }
-  .numpad-btn.wide:hover { background: var(--navy-light); }
-  .login-hint { text-align: center; font-size: 12px; color: var(--grey); margin-top: 4px; }
-  .login-error { background: var(--danger-bg); color: var(--danger); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 13px; text-align: center; margin-bottom: 12px; display: none; }
-  .login-error.visible { display: block; }
-  .login-tabs { display: flex; gap: 0; margin-bottom: 20px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); overflow: hidden; }
-  .login-tab { flex: 1; padding: 8px; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; background: white; color: var(--grey); border: none; transition: all 0.15s; }
-  .login-tab.active { background: var(--navy); color: white; }
 
-  /* APP SHELL */
+  .login-logo-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--hh-navy);
+    letter-spacing: -0.3px;
+  }
+
+  .login-logo-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+    letter-spacing: 0.2px;
+  }
+
+  .login-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-label);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .login-select {
+    width: 100%;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    font-size: 14px;
+    color: var(--text-primary);
+    background: var(--bg-input);
+    outline: none;
+    margin-bottom: 16px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a8d' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: border-color 0.15s;
+  }
+
+  .login-select:focus { border-color: var(--hh-blue); box-shadow: 0 0 0 3px rgba(91,155,213,0.15); }
+
+  .pin-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .pin-dot {
+    width: 54px;
+    height: 58px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--text-primary);
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+
+  .pin-dot.filled {
+    border-color: var(--hh-blue);
+    background: var(--hh-blue-pale);
+    color: var(--hh-navy);
+  }
+
+  .pin-dot.error {
+    border-color: var(--danger);
+    background: var(--danger-bg);
+    animation: shake 0.3s;
+  }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-5px)}
+    75%{transform:translateX(5px)}
+  }
+
+  .numpad {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 7px;
+    margin-bottom: 14px;
+  }
+
+  .numpad-btn {
+    height: 50px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.1s;
+  }
+
+  .numpad-btn:hover { background: var(--hh-blue-pale); border-color: var(--hh-blue); }
+  .numpad-btn:active { transform: scale(0.96); }
+  .numpad-btn.del { font-size: 15px; color: var(--text-muted); }
+
+  .login-hint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .login-error {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 10px;
+    display: none;
+  }
+
+  .login-error.visible { display: block; }
+
+  .login-tabs {
+    display: flex;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .login-tab {
+    flex: 1;
+    padding: 8px 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    transition: all 0.15s;
+    letter-spacing: 0.2px;
+  }
+
+  .login-tab.active {
+    background: var(--hh-navy);
+    color: white;
+  }
+
+  /* ── APP SHELL ──────────────────────────────────────────────────────────── */
   .app { display: none; }
   .app.visible { display: block; }
-  header { background: var(--navy); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-  .logo { display: flex; align-items: center; gap: 10px; color: var(--white); font-size: 16px; font-weight: 600; }
-  .logo-icon { width: 30px; height: 30px; background: var(--blue); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
+
+  header {
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  .logo-icon {
+    width: 30px;
+    height: 30px;
+    background: var(--hh-navy);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .logo-icon svg { fill: white; }
-  .logo-sub { font-size: 12px; color: var(--grey-light); font-weight: 400; margin-left: 4px; }
-  .header-right { display: flex; align-items: center; gap: 12px; }
-  .location-badge { background: var(--navy-light); color: var(--blue-light); border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 600; }
-  .role-badge { border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-  .role-badge.master { background: #f0c040; color: #5a3c00; }
-  .role-badge.cc { background: var(--blue-pale); color: #0c447c; }
-  .role-badge.owner { background: var(--success-bg); color: var(--success); }
-  .header-btn { background: rgba(255,255,255,0.1); color: white; border: none; border-radius: var(--radius-sm); padding: 6px 12px; font-size: 12px; cursor: pointer; }
-  .header-btn:hover { background: rgba(255,255,255,0.18); }
-  .new-quote-btn { background: var(--blue); color: white; border: none; border-radius: var(--radius-sm); padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-  .new-quote-btn:hover { background: var(--blue-light); }
-  .admin-toggle { display: flex; align-items: center; gap: 7px; color: var(--grey-light); font-size: 12px; cursor: pointer; user-select: none; }
-  .toggle-switch { width: 34px; height: 19px; background: var(--navy-light); border-radius: 10px; position: relative; transition: background 0.2s; border: 1px solid rgba(255,255,255,0.12); }
-  .toggle-switch.on { background: var(--blue); }
-  .toggle-switch::after { content:''; position:absolute; width:13px; height:13px; background:white; border-radius:50%; top:2px; left:2px; transition:left 0.2s; }
-  .toggle-switch.on::after { left:18px; }
 
-  /* LOCATION SWITCHER (master/cc) */
-  .loc-switcher { background: var(--navy-mid); border-bottom: 1px solid rgba(91,155,213,0.15); padding: 8px 2rem; display: none; }
-  .loc-switcher.visible { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .loc-switcher label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--grey-light); white-space: nowrap; }
-  .loc-switcher select { height: 32px; border: 1px solid rgba(91,155,213,0.3); background: var(--navy-light); color: white; border-radius: var(--radius-sm); padding: 0 10px; font-size: 13px; outline: none; min-width: 220px; }
+  .logo-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--border);
+    margin: 0 2px;
+  }
 
-  /* MAIN LAYOUT */
-  .main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem; display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
-  .section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--grey); margin-bottom: 10px; }
+  .logo-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
 
-  /* CUSTOMER PANEL */
-  .customer-panel { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 1.25rem; margin-bottom: 1.25rem; }
-  .search-row { display: flex; gap: 8px; margin-bottom: 12px; }
-  .search-row input { flex: 1; height: 38px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 0 10px; font-size: 14px; color: var(--navy); outline: none; }
-  .search-row input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(91,155,213,0.15); }
-  .search-btn { height: 38px; padding: 0 14px; background: var(--navy); color: white; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; }
-  .search-btn:hover { background: var(--navy-light); }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .role-badge {
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .role-badge.master { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+  .role-badge.cc { background: var(--info-bg); color: var(--info-text); border: 1px solid var(--info-border); }
+  .role-badge.owner { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+
+  .hh-btn {
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .hh-btn:hover { background: var(--bg-card-hover); border-color: var(--hh-blue); color: var(--hh-blue); }
+
+  .hh-btn-primary {
+    background: var(--hh-navy);
+    color: white;
+    border-color: var(--hh-navy);
+  }
+
+  .hh-btn-primary:hover { background: #0f2647; border-color: #0f2647; color: white; }
+
+  .header-btn { height: 32px; padding: 0 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+  .header-btn:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-bg); }
+
+  .gear-btn { height: 32px; width: 32px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); border-radius: var(--radius-sm); font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .gear-btn:hover { border-color: var(--hh-blue); color: var(--hh-blue); background: var(--hh-blue-pale); }
+
+  .new-quote-btn { height: 32px; padding: 0 12px; background: var(--hh-navy); color: white; border: none; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: background 0.15s; }
+  .new-quote-btn:hover { background: #0f2647; }
+
+  /* Dark mode toggle */
+  .dm-toggle { height: 32px; width: 32px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); border-radius: var(--radius-sm); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .dm-toggle:hover { border-color: var(--hh-blue); color: var(--hh-blue); }
+
+  .admin-toggle { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 12px; cursor: pointer; user-select: none; }
+  .toggle-switch { width: 32px; height: 18px; background: var(--border); border-radius: 9px; position: relative; transition: background 0.2s; }
+  .toggle-switch.on { background: var(--hh-blue); }
+  .toggle-switch::after { content:''; position:absolute; width:12px; height:12px; background:white; border-radius:50%; top:3px; left:3px; transition:left 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+  .toggle-switch.on::after { left:17px; }
+
+  /* ── LOCATION SWITCHER ──────────────────────────────────────────────────── */
+  .loc-switcher {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 1.5rem;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .loc-switcher.visible { display: flex; }
+
+  .loc-switcher label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-label);
+    white-space: nowrap;
+  }
+
+  .loc-switcher select {
+    height: 30px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
+    padding: 0 10px;
+    font-size: 13px;
+    outline: none;
+    min-width: 220px;
+    transition: border-color 0.15s;
+  }
+
+  .loc-switcher select:focus { border-color: var(--hh-blue); }
+
+  /* ── MAIN LAYOUT ────────────────────────────────────────────────────────── */
+  .main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 1.25rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  /* HeroHub-style section label */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    color: var(--text-label);
+    margin-bottom: 8px;
+  }
+
+  /* HeroHub card */
+  .hh-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+
+  .hh-card-body { padding: 1rem 1.25rem; }
+
+  .hh-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── CUSTOMER PANEL ─────────────────────────────────────────────────────── */
+  .customer-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .search-row { display: flex; gap: 7px; margin-bottom: 12px; }
+
+  .search-row input {
+    flex: 1;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 10px;
+    font-size: 13px;
+    color: var(--text-primary);
+    background: var(--bg-input);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .search-row input:focus { border-color: var(--hh-blue); box-shadow: 0 0 0 3px rgba(91,155,213,0.12); }
+  .search-row input::placeholder { color: var(--text-muted); }
+
+  .search-btn {
+    height: 36px;
+    padding: 0 14px;
+    background: var(--hh-navy);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+
+  .search-btn:hover { background: #0f2647; }
   .search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .cust-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .fg { display: flex; flex-direction: column; gap: 4px; }
+
+  .cust-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .fg { display: flex; flex-direction: column; gap: 3px; }
   .fg.full { grid-column: 1/-1; }
-  .fg label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--grey); }
-  .fg input { height: 36px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 0 10px; font-size: 14px; color: var(--navy); outline: none; }
-  .fg input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(91,155,213,0.15); }
-  .sm-status { margin-top: 10px; border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; display: none; align-items: flex-start; gap: 8px; }
+
+  .fg label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--text-label);
+  }
+
+  .fg input {
+    height: 34px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 9px;
+    font-size: 13px;
+    color: var(--text-primary);
+    background: var(--bg-input);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .fg input:focus { border-color: var(--hh-blue); box-shadow: 0 0 0 3px rgba(91,155,213,0.12); }
+  .fg input::placeholder { color: var(--text-muted); }
+
+  /* SM status */
+  .sm-status { margin-top: 10px; border-radius: var(--radius-sm); padding: 8px 10px; font-size: 12px; display: none; align-items: flex-start; gap: 7px; border: 1px solid transparent; }
   .sm-status.visible { display: flex; }
-  .sm-status.found { background: var(--success-bg); color: var(--success); }
-  .sm-status.created { background: var(--blue-pale); color: #0c447c; }
-  .sm-status.error { background: var(--danger-bg); color: var(--danger); }
-  .sm-status.loading { background: var(--grey-pale); color: var(--grey); }
-  .sm-icon { font-size: 14px; flex-shrink: 0; }
-  .sm-title { font-weight: 600; }
-  .sm-detail { margin-top: 2px; line-height: 1.5; }
+  .sm-status.found { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
+  .sm-status.created { background: var(--info-bg); color: var(--info-text); border-color: var(--info-border); }
+  .sm-status.error { background: var(--danger-bg); color: var(--danger); border-color: var(--danger-border); }
+  .sm-status.loading { background: var(--bg); color: var(--text-muted); border-color: var(--border); }
+  .sm-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .sm-title { font-weight: 600; font-size: 12px; }
+  .sm-detail { margin-top: 1px; line-height: 1.4; font-size: 11px; opacity: 0.85; }
+
+  /* History */
   .history-section { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; display: none; }
   .history-section.visible { display: block; }
-  .history-lbl { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--grey); margin-bottom: 6px; }
-  .history-item { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 8px; background: var(--grey-pale); border-radius: 4px; margin-bottom: 4px; }
-  .history-empty { font-size: 12px; color: var(--grey); font-style: italic; }
+  .history-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-label); margin-bottom: 6px; }
+  .history-item { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 5px 8px; background: var(--bg); border-radius: var(--radius-sm); margin-bottom: 3px; border: 1px solid var(--border); }
+  .history-item-name { color: var(--text-primary); font-weight: 500; }
+  .history-item-date { color: var(--text-muted); font-size: 11px; }
+  .history-empty { font-size: 12px; color: var(--text-muted); font-style: italic; }
 
-  /* SIZE SELECTOR */
-  .size-sel { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 1.25rem; margin-bottom: 1.25rem; }
-  .size-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
-  .size-btn { border: 1.5px solid var(--border-mid); background: white; border-radius: var(--radius-sm); padding: 10px 8px; cursor: pointer; text-align: center; transition: all 0.15s; }
-  .size-btn:hover { border-color: var(--blue); background: var(--blue-pale); }
-  .size-btn.active { border-color: var(--blue); background: var(--navy); color: white; }
-  .size-btn .sq { font-size: 14px; font-weight: 600; display: block; }
-  .size-btn .rng { font-size: 11px; color: var(--grey); margin-top: 2px; display: block; }
-  .size-btn.active .rng { color: var(--grey-light); }
+  /* ── SIZE SELECTOR ──────────────────────────────────────────────────────── */
+  .size-sel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
 
-  /* SERVICES */
-  .svc-panel { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+  .size-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
+
+  .size-btn {
+    border: 1.5px solid var(--border);
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    padding: 9px 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+
+  .size-btn:hover { border-color: var(--hh-blue); background: var(--hh-blue-pale); }
+
+  .size-btn.active {
+    border-color: var(--hh-blue);
+    background: var(--hh-navy);
+    color: white;
+    box-shadow: 0 2px 8px rgba(11,28,53,0.2);
+  }
+
+  .size-btn .sq { font-size: 13px; font-weight: 600; display: block; color: inherit; }
+  .size-btn .rng { font-size: 10px; color: var(--text-muted); margin-top: 2px; display: block; }
+  .size-btn.active .rng { color: rgba(255,255,255,0.65); }
+
+  /* ── SERVICES PANEL ─────────────────────────────────────────────────────── */
+  .svc-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
   .cat { border-bottom: 1px solid var(--border); }
   .cat:last-child { border-bottom: none; }
-  .cat-hdr { padding: 11px 1.25rem; background: var(--grey-pale); display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
-  .cat-hdr:hover { background: var(--blue-pale); }
-  .cat-name { font-size: 13px; font-weight: 600; color: var(--navy); flex: 1; }
-  .cat-cnt { font-size: 11px; background: var(--navy); color: white; border-radius: 10px; padding: 1px 7px; display: none; }
+
+  .cat-hdr {
+    padding: 10px 1.25rem;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s;
+  }
+
+  .cat-hdr:hover { background: var(--hh-blue-pale); }
+
+  .cat-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+    letter-spacing: 0.1px;
+  }
+
+  .cat-cnt {
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--hh-navy);
+    color: white;
+    border-radius: 10px;
+    padding: 1px 7px;
+    display: none;
+  }
+
+  [data-theme="dark"] .cat-cnt { background: var(--hh-blue); }
   .cat-cnt.on { display: inline-block; }
-  .chev { width: 16px; height: 16px; color: var(--grey); transition: transform 0.2s; }
+
+  .chev { width: 14px; height: 14px; color: var(--text-muted); transition: transform 0.2s; }
   .chev.open { transform: rotate(180deg); }
   .svc-rows { display: none; }
   .svc-rows.open { display: block; }
-  .svc-row { display: grid; grid-template-columns: 22px 1fr auto auto; align-items: center; gap: 10px; padding: 9px 1.25rem; border-bottom: 1px solid rgba(0,0,0,0.04); cursor: pointer; transition: background 0.1s; }
+
+  .svc-row {
+    display: grid;
+    grid-template-columns: 20px 1fr auto auto;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 1.25rem;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
   .svc-row:last-child { border-bottom: none; }
-  .svc-row:hover { background: var(--grey-pale); }
-  .svc-row.checked { background: #f0f7ff; }
-  .cb { width: 17px; height: 17px; border: 1.5px solid var(--grey-light); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
-  .svc-row.checked .cb { background: var(--blue); border-color: var(--blue); }
+  .svc-row:hover { background: var(--bg); }
+  .svc-row.checked { background: var(--hh-blue-pale); }
+  [data-theme="dark"] .svc-row.checked { background: rgba(91,155,213,0.08); }
+
+  .cb {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+
+  .svc-row.checked .cb { background: var(--hh-blue); border-color: var(--hh-blue); }
   .cb svg { display: none; }
   .svc-row.checked .cb svg { display: block; }
-  .svc-nm { font-size: 13px; color: var(--navy); }
-  .price-disp { font-size: 13px; font-weight: 600; color: var(--navy); text-align: right; min-width: 60px; }
-  .onsite-badge { font-size: 11px; background: var(--onsite-bg); color: var(--onsite); border-radius: 4px; padding: 2px 7px; font-weight: 500; white-space: nowrap; }
-  .price-inp { font-size: 13px; font-weight: 600; color: var(--navy); border: 1px solid var(--border-mid); border-radius: 4px; padding: 3px 6px; width: 76px; text-align: right; display: none; }
+
+  .svc-nm { font-size: 13px; color: var(--text-primary); }
+
+  .price-disp {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: right;
+    min-width: 56px;
+  }
+
+  .onsite-badge {
+    font-size: 10px;
+    background: var(--onsite-bg);
+    color: var(--onsite);
+    border: 1px solid var(--onsite-border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .price-inp {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 6px;
+    width: 72px;
+    text-align: right;
+    display: none;
+    background: var(--bg-input);
+  }
+
+  .price-inp:focus { outline: none; border-color: var(--hh-blue); }
   .can-edit .price-inp { display: block; }
   .can-edit .price-disp { display: none; }
-  .pqty { display: none; align-items: center; gap: 4px; }
+
+  .pqty { display: none; align-items: center; gap: 3px; }
   .svc-row.checked .pqty { display: flex; }
-  .qbtn { width: 20px; height: 20px; border: 1px solid var(--border-mid); background: white; border-radius: 3px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--navy); }
-  .qbtn:hover { background: var(--blue-pale); }
+
+  .qbtn {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--text-primary);
+    transition: all 0.1s;
+  }
+
+  .qbtn:hover { background: var(--hh-blue-pale); border-color: var(--hh-blue); }
   .qval { min-width: 18px; text-align: center; font-size: 12px; font-weight: 500; }
 
-  /* QUOTE PANEL */
-  .quote-panel { position: sticky; top: 76px; }
-  .quote-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-  .q-hdr { background: var(--navy); padding: 1rem 1.25rem; }
-  .q-title { font-size: 13px; font-weight: 600; color: white; margin-bottom: 3px; }
-  .q-cust-name { font-size: 15px; font-weight: 600; color: white; }
-  .q-cust-addr { font-size: 12px; color: var(--grey-light); margin-top: 2px; }
-  .q-sub { font-size: 12px; color: var(--grey-light); }
-  .q-body { padding: 1rem 1.25rem; }
-  .q-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); gap: 8px; }
-  .q-item:last-child { border-bottom: none; }
-  .qi-nm { font-size: 13px; color: var(--navy); flex: 1; line-height: 1.3; }
-  .qi-price { font-size: 13px; font-weight: 600; color: var(--navy); white-space: nowrap; }
-  .qi-onsite { font-size: 11px; color: var(--onsite); background: var(--onsite-bg); border-radius: 3px; padding: 1px 5px; white-space: nowrap; }
-  .empty-st { text-align: center; padding: 1.75rem 1rem; color: var(--grey); }
-  .empty-icon { font-size: 28px; margin-bottom: 6px; opacity: 0.4; }
-  .empty-st p { font-size: 13px; }
-  .q-total { border-top: 2px solid var(--navy); padding: 10px 1.25rem; display: flex; justify-content: space-between; align-items: center; }
-  .tot-lbl { font-size: 13px; font-weight: 600; color: var(--navy); }
-  .tot-amt { font-size: 21px; font-weight: 700; color: var(--navy); }
-  .onsite-note { padding: 7px 1.25rem 10px; font-size: 11px; color: var(--onsite); background: var(--onsite-bg); border-top: 1px solid #f0d9b0; display: none; }
-  .onsite-note.on { display: block; }
-  .save-banner { display: none; background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: var(--radius-sm); padding: 7px 12px; margin: 0 1.25rem 10px; font-size: 12px; color: var(--warn); align-items: center; gap: 8px; }
-  .save-banner.on { display: flex; }
-  .save-banner button { background: var(--warn-border); border: none; border-radius: 4px; padding: 3px 10px; font-size: 12px; font-weight: 600; cursor: pointer; color: #5a3c00; margin-left: auto; }
-  .q-actions { padding: 0 1.25rem 1.25rem; display: flex; gap: 8px; }
-  .btn-pri { flex: 1; background: var(--blue); color: white; border: none; border-radius: var(--radius-sm); padding: 9px; font-size: 13px; font-weight: 600; cursor: pointer; }
-  .btn-pri:hover { background: #4a8ac4; }
-  .btn-sec { background: white; color: var(--navy); border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 9px 12px; font-size: 13px; cursor: pointer; }
-  .btn-sec:hover { background: var(--grey-pale); }
+  /* ── QUOTE PANEL ────────────────────────────────────────────────────────── */
+  .quote-panel { position: sticky; top: 70px; }
 
-  /* PIN CHANGE (modal only) */
-  .pin-fields { display: flex; flex-direction: column; gap: 12px; }
-  .pin-field { display: flex; flex-direction: column; gap: 4px; }
-  .pin-field label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--grey); }
-  .pin-field input { height: 40px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 0 10px; font-size: 22px; letter-spacing: 10px; color: var(--navy); outline: none; max-width: 180px; }
-  .pin-field input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(91,155,213,0.15); }
-  .pin-save-btn { width: 100%; background: var(--navy); color: white; border: none; border-radius: var(--radius-sm); padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 4px; }
-  .pin-save-btn:hover { background: var(--navy-light); }
+  .quote-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+  }
+
+  .q-hdr {
+    background: var(--hh-navy);
+    padding: 14px 1.25rem;
+    border-bottom: none;
+  }
+
+  [data-theme="dark"] .q-hdr { background: #0a1520; }
+
+  .q-title {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 4px;
+  }
+
+  .q-cust-name { font-size: 16px; font-weight: 700; color: white; letter-spacing: -0.2px; }
+  .q-cust-addr { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+  .q-sub { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500; }
+
+  .q-body { padding: 0.875rem 1.25rem; }
+
+  .q-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+
+  .q-item:last-child { border-bottom: none; }
+  .qi-nm { font-size: 12px; color: var(--text-secondary); flex: 1; line-height: 1.35; }
+  .qi-price { font-size: 12px; font-weight: 700; color: var(--text-primary); white-space: nowrap; }
+  .qi-onsite { font-size: 10px; color: var(--onsite); background: var(--onsite-bg); border: 1px solid var(--onsite-border); border-radius: 3px; padding: 1px 5px; white-space: nowrap; font-weight: 600; }
+
+  .empty-st { text-align: center; padding: 1.5rem 1rem; color: var(--text-muted); }
+  .empty-icon { font-size: 26px; margin-bottom: 6px; opacity: 0.35; }
+  .empty-st p { font-size: 12px; }
+
+  .q-total {
+    border-top: 2px solid var(--border);
+    padding: 10px 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg);
+  }
+
+  .tot-lbl { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); }
+  .tot-amt { font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
+
+  .onsite-note {
+    padding: 7px 1.25rem;
+    font-size: 11px;
+    color: var(--onsite);
+    background: var(--onsite-bg);
+    border-top: 1px solid var(--onsite-border);
+    display: none;
+    line-height: 1.4;
+  }
+
+  .onsite-note.on { display: block; }
+
+  .save-banner {
+    display: none;
+    background: var(--warn-bg);
+    border-top: 1px solid var(--warn-border);
+    padding: 7px 1.25rem;
+    font-size: 11px;
+    color: var(--warn);
+    align-items: center;
+    gap: 8px;
+  }
+
+  .save-banner.on { display: flex; }
+
+  .save-banner button {
+    background: var(--warn-border);
+    border: none;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #5a3c00;
+    margin-left: auto;
+  }
+
+  .q-actions { padding: 0.875rem 1.25rem; display: flex; gap: 7px; }
+
+  .btn-pri {
+    flex: 1;
+    background: var(--hh-navy);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 9px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-pri:hover { background: #0f2647; }
+
+  .btn-sec {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-sec:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-bg); }
+
+  /* ── MODALS ─────────────────────────────────────────────────────────────── */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(11,28,53,0.6);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+
+  .backdrop.open { display: flex; }
+
+  .modal {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    width: 400px;
+    max-width: 92vw;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    border: 1px solid var(--border);
+  }
+
+  .m-hdr {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .m-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+  .m-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .m-body { padding: 1.25rem; max-height: 360px; overflow-y: auto; }
+  .m-body p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px; }
+  .m-actions { display: flex; gap: 8px; padding: 0 1.25rem 1.25rem; }
+
+  .m-btn-pri { flex: 1; background: var(--hh-navy); color: white; border: none; border-radius: var(--radius-sm); padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+  .m-btn-pri:hover { background: #0f2647; }
+  .m-btn-pri:disabled { opacity: 0.5; cursor: not-allowed; }
+  .m-btn-sec { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 16px; font-size: 13px; cursor: pointer; transition: all 0.15s; }
+  .m-btn-sec:hover { background: var(--bg); }
+  .m-btn-danger { flex: 1; background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); border-radius: var(--radius-sm); padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+  .result-card { padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 7px; cursor: pointer; transition: all 0.1s; background: var(--bg-card); }
+  .result-card:hover { background: var(--hh-blue-pale); border-color: var(--hh-blue); }
+  .result-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .result-detail { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* PIN change in modals */
+  .pin-fields { display: flex; flex-direction: column; gap: 10px; }
+  .pin-field { display: flex; flex-direction: column; gap: 3px; }
+  .pin-field label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-label); }
+  .pin-field input { height: 40px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 10px; font-size: 22px; letter-spacing: 10px; color: var(--text-primary); background: var(--bg-input); outline: none; max-width: 160px; transition: border-color 0.15s; }
+  .pin-field input:focus { border-color: var(--hh-blue); box-shadow: 0 0 0 3px rgba(91,155,213,0.12); }
+  .pin-save-btn { width: 100%; background: var(--hh-navy); color: white; border: none; border-radius: var(--radius-sm); padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 4px; }
   .pin-msg { font-size: 12px; margin-top: 6px; text-align: center; }
   .pin-msg.ok { color: var(--success); }
   .pin-msg.err { color: var(--danger); }
 
-  /* FIRST LOGIN MODAL */
-  .first-login-badge { background: #f0c040; color: #5a3c00; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 10px; }
+  /* First login badge */
+  .first-login-badge { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; border-radius: 20px; padding: 3px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 10px; }
 
-  /* GEAR BUTTON */
-  .gear-btn { background: rgba(255,255,255,0.1); color: white; border: none; border-radius: var(--radius-sm); padding: 6px 10px; font-size: 16px; cursor: pointer; line-height: 1; }
-  .gear-btn:hover { background: rgba(255,255,255,0.18); }
+  /* RC status dot */
+  .rc-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); display: inline-block; }
+  .rc-dot.ok { background: var(--success); }
+  .rc-dot.err { background: var(--danger); }
 
-  /* MODALS */
-  .backdrop { position: fixed; inset: 0; background: rgba(11,28,53,0.55); z-index: 200; display: none; align-items: center; justify-content: center; }
-  .backdrop.open { display: flex; }
-  .modal { background: white; border-radius: var(--radius); width: 420px; max-width: 92vw; overflow: hidden; }
-  .m-hdr { background: var(--navy); padding: 1rem 1.25rem; color: white; }
-  .m-title { font-size: 15px; font-weight: 600; }
-  .m-sub { font-size: 12px; color: var(--grey-light); margin-top: 3px; }
-  .m-body { padding: 1.25rem; max-height: 340px; overflow-y: auto; }
-  .m-body p { font-size: 14px; color: var(--navy); line-height: 1.6; margin-bottom: 10px; }
-  .m-actions { display: flex; gap: 8px; padding: 0 1.25rem 1.25rem; }
-  .m-btn-pri { flex: 1; background: var(--blue); color: white; border: none; border-radius: var(--radius-sm); padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
-  .m-btn-pri:disabled { opacity: 0.5; cursor: not-allowed; }
-  .m-btn-sec { background: white; color: var(--navy); border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 10px 16px; font-size: 13px; cursor: pointer; }
-  .m-btn-danger { flex: 1; background: var(--danger-bg); color: var(--danger); border: 1px solid #f09595; border-radius: var(--radius-sm); padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
-  .result-card { padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; cursor: pointer; }
-  .result-card:hover { background: var(--blue-pale); }
-  .result-name { font-size: 14px; font-weight: 600; color: var(--navy); }
-  .result-detail { font-size: 12px; color: var(--grey); margin-top: 2px; }
-
-  .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--success); color: white; padding: 10px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 999; }
+  /* Toast */
+  .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(16px); background: var(--hh-navy); color: white; padding: 9px 18px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 999; box-shadow: var(--shadow-md); border: 1px solid rgba(255,255,255,0.08); }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  .rc-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--grey); display: inline-block; margin-right: 5px; }
-  .rc-dot.ok { background: #4caf7d; }
-  .rc-dot.err { background: #e24b4a; }
-
+  /* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
   @media (max-width: 800px) {
     .main { grid-template-columns: 1fr; padding: 1rem; }
     .quote-panel { position: static; }
@@ -249,36 +956,31 @@
   <div class="login-card">
     <div class="login-logo">
       <div class="login-logo-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22" style="fill:rgba(255,255,255,0.35)"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="white"/><polyline points="9 22 9 12 15 12 15 22" fill="rgba(255,255,255,0.3)"/></svg>
       </div>
       <div>
         <div class="login-logo-text">Window Hero</div>
         <div class="login-logo-sub">Pricing Calculator</div>
       </div>
     </div>
-
     <div class="login-tabs">
       <button class="login-tab active" onclick="setLoginMode('location')" id="tab-location">Location</button>
       <button class="login-tab" onclick="setLoginMode('master')" id="tab-master">Franchisor</button>
       <button class="login-tab" onclick="setLoginMode('cc')" id="tab-cc">Call Center</button>
     </div>
-
     <div id="location-select-wrap">
       <label class="login-label">Select your location</label>
       <select class="login-select" id="locationSelect">
         <option value="">— Choose a location —</option>
       </select>
     </div>
-
     <div class="login-error" id="loginError"></div>
-
     <div class="pin-row" id="pinDisplay">
       <div class="pin-dot" id="pd0">·</div>
       <div class="pin-dot" id="pd1">·</div>
       <div class="pin-dot" id="pd2">·</div>
       <div class="pin-dot" id="pd3">·</div>
     </div>
-
     <div class="numpad">
       <button class="numpad-btn" onclick="numPress('1')">1</button>
       <button class="numpad-btn" onclick="numPress('2')">2</button>
@@ -289,7 +991,7 @@
       <button class="numpad-btn" onclick="numPress('7')">7</button>
       <button class="numpad-btn" onclick="numPress('8')">8</button>
       <button class="numpad-btn" onclick="numPress('9')">9</button>
-      <button class="numpad-btn del" onclick="numDel()">⌫</button>
+      <button class="numpad-btn del" onclick="numDel()">&#9003;</button>
       <button class="numpad-btn" onclick="numPress('0')">0</button>
       <button class="numpad-btn" onclick="numClear()">C</button>
     </div>
@@ -302,23 +1004,25 @@
   <header>
     <div class="logo">
       <div class="logo-icon">
-        <svg width="17" height="17" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22" style="fill:rgba(255,255,255,0.35)"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="white"/><polyline points="9 22 9 12 15 12 15 22" fill="rgba(255,255,255,0.35)"/></svg>
       </div>
       Window Hero
-      <span class="logo-sub" id="headerLocName"></span>
+      <div class="logo-divider"></div>
+      <span class="logo-sub" id="headerLocName">Pricing Calculator</span>
     </div>
     <div class="header-right">
       <span class="rc-dot" id="rcDot" title="Firebase status"></span>
       <span class="role-badge" id="roleBadge"></span>
       <button class="new-quote-btn" onclick="confirmNewQuote()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New Quote
       </button>
-      <label class="admin-toggle" id="editToggleWrap" style="display:none">
+      <label class="admin-toggle" id="editToggleWrap" style="display:none" title="Edit prices">
         <span>Edit</span>
         <div class="toggle-switch" id="editToggle"></div>
       </label>
-      <button class="gear-btn" id="settingsBtn" onclick="openSettings()" title="Settings" style="display:none">⚙️</button>
+      <button class="dm-toggle" onclick="toggleDarkMode()" id="dmBtn" title="Toggle dark mode">&#9790;</button>
+      <button class="gear-btn" id="settingsBtn" onclick="openSettings()" title="Settings" style="display:none">&#9881;</button>
       <button class="header-btn" onclick="logout()">Sign out</button>
     </div>
   </header>
@@ -332,7 +1036,6 @@
 
   <div class="main">
     <div class="left-col">
-
       <!-- Customer Panel -->
       <div class="customer-panel">
         <div class="section-label">Customer</div>
@@ -381,21 +1084,23 @@
             <div class="q-cust-name" id="qCustName"></div>
             <div class="q-cust-addr" id="qCustAddr"></div>
           </div>
-          <div class="q-sub" id="qMeta">No size selected</div>
+          <div class="q-sub" id="qMeta">Select a home size to begin</div>
         </div>
-        <div class="q-body" id="qBody"><div class="empty-st"><div class="empty-icon">🪟</div><p>Select services to build the quote</p></div></div>
+        <div class="q-body" id="qBody">
+          <div class="empty-st"><div class="empty-icon">&#128631;</div><p>Select services to build the quote</p></div>
+        </div>
         <div class="q-total" id="qTotal" style="display:none">
           <span class="tot-lbl">Quoted total</span>
           <span class="tot-amt" id="totAmt">$0</span>
         </div>
-        <div class="onsite-note" id="onsiteNote">★ On-site items require an in-person assessment.</div>
+        <div class="onsite-note" id="onsiteNote">&#9733; On-site items require an in-person assessment.</div>
         <div class="save-banner" id="saveBanner">
           <span>Unsaved price changes</span>
           <button onclick="savePrices()">Save</button>
         </div>
         <div class="q-actions">
           <button class="btn-pri" onclick="copyQuote()">Copy to clipboard</button>
-          <button class="btn-sec" onclick="confirmNewQuote()" title="Clear">✕</button>
+          <button class="btn-sec" onclick="confirmNewQuote()" title="Clear">&#10005;</button>
         </div>
       </div>
     </div>
@@ -405,7 +1110,7 @@
 <!-- New Quote Modal -->
 <div class="backdrop" id="modalNewQuote">
   <div class="modal">
-    <div class="m-hdr"><div class="m-title">Start a new quote?</div><div class="m-sub">Clears current customer and selections.</div></div>
+    <div class="m-hdr"><div class="m-title">Start a new quote?</div><div class="m-sub">Clears current customer and all selections.</div></div>
     <div class="m-body"><p id="newQuoteMsg"></p></div>
     <div class="m-actions">
       <button class="m-btn-sec" onclick="closeModal('modalNewQuote')">Cancel</button>
@@ -426,8 +1131,8 @@
   </div>
 </div>
 
-<!-- First Login PIN Change Modal (forced) -->
-<div class="backdrop open" id="modalFirstLogin" style="display:none;z-index:300">
+<!-- First Login PIN Modal -->
+<div class="backdrop" id="modalFirstLogin" style="display:none;z-index:300">
   <div class="modal">
     <div class="m-hdr">
       <div class="m-title">Welcome to Window Hero Pricing</div>
@@ -437,14 +1142,8 @@
       <div class="first-login-badge">Action Required</div>
       <p>You're logged in with the default PIN. For security, please choose a new 4-digit PIN now. You'll use this to log in from any device.</p>
       <div class="pin-fields">
-        <div class="pin-field">
-          <label>New PIN</label>
-          <input type="password" id="firstNewPin" maxlength="4" placeholder="••••" inputmode="numeric" />
-        </div>
-        <div class="pin-field">
-          <label>Confirm PIN</label>
-          <input type="password" id="firstConfirmPin" maxlength="4" placeholder="••••" inputmode="numeric" />
-        </div>
+        <div class="pin-field"><label>New PIN</label><input type="password" id="firstNewPin" maxlength="4" placeholder="&#8226;&#8226;&#8226;&#8226;" inputmode="numeric" /></div>
+        <div class="pin-field"><label>Confirm PIN</label><input type="password" id="firstConfirmPin" maxlength="4" placeholder="&#8226;&#8226;&#8226;&#8226;" inputmode="numeric" /></div>
       </div>
       <div class="pin-msg" id="firstPinMsg"></div>
     </div>
@@ -457,25 +1156,13 @@
 <!-- Settings Modal -->
 <div class="backdrop" id="modalSettings">
   <div class="modal">
-    <div class="m-hdr">
-      <div class="m-title">Settings</div>
-      <div class="m-sub" id="settingsLocName"></div>
-    </div>
+    <div class="m-hdr"><div class="m-title">Settings</div><div class="m-sub" id="settingsLocName"></div></div>
     <div class="m-body">
-      <p style="font-weight:600;font-size:13px;margin-bottom:12px;color:var(--navy)">Change Location PIN</p>
+      <p style="font-weight:600;font-size:12px;margin-bottom:12px;color:var(--text-primary)">Change Location PIN</p>
       <div class="pin-fields">
-        <div class="pin-field" id="settingsCurrentWrap">
-          <label>Current PIN</label>
-          <input type="password" id="settingsCurrentPin" maxlength="4" placeholder="••••" inputmode="numeric" />
-        </div>
-        <div class="pin-field">
-          <label>New PIN</label>
-          <input type="password" id="settingsNewPin" maxlength="4" placeholder="••••" inputmode="numeric" />
-        </div>
-        <div class="pin-field">
-          <label>Confirm New PIN</label>
-          <input type="password" id="settingsConfirmPin" maxlength="4" placeholder="••••" inputmode="numeric" />
-        </div>
+        <div class="pin-field" id="settingsCurrentWrap"><label>Current PIN</label><input type="password" id="settingsCurrentPin" maxlength="4" placeholder="&#8226;&#8226;&#8226;&#8226;" inputmode="numeric" /></div>
+        <div class="pin-field"><label>New PIN</label><input type="password" id="settingsNewPin" maxlength="4" placeholder="&#8226;&#8226;&#8226;&#8226;" inputmode="numeric" /></div>
+        <div class="pin-field"><label>Confirm New PIN</label><input type="password" id="settingsConfirmPin" maxlength="4" placeholder="&#8226;&#8226;&#8226;&#8226;" inputmode="numeric" /></div>
       </div>
       <div class="pin-msg" id="settingsPinMsg"></div>
     </div>
@@ -486,13 +1173,12 @@
   </div>
 </div>
 
-
-
 <div class="toast" id="toast"></div>
+
+<!-- Firebase -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getRemoteConfig, fetchAndActivate, getValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-remote-config.js';
-
 const firebaseConfig = {
   apiKey: "AIzaSyCmxzwD718zISqy_l0MVHTdz7gVMZfjR7A",
   authDomain: "ssc-calculator-wh.firebaseapp.com",
@@ -501,25 +1187,23 @@ const firebaseConfig = {
   messagingSenderId: "66246922281",
   appId: "1:66246922281:web:17ef6c15298e7123850c38"
 };
-
 const app = initializeApp(firebaseConfig);
 const rc = getRemoteConfig(app);
 rc.settings.minimumFetchIntervalMillis = 3600000;
-
 const dot = document.getElementById('rcDot');
 try {
   await fetchAndActivate(rc);
-  window.__MASTER_PIN = getValue(rc, 'master_pin').asString();
-  window.__CC_PIN     = getValue(rc, 'cc_pin').asString();
-  window.__SM_KEY     = getValue(rc, 'sm_api_key').asString();
-  window.__PROXY_URL  = getValue(rc, 'sm_proxy_url').asString();
-  window.__FS_URL     = getValue(rc, 'firestore_proxy_url').asString();
+  window.__MASTER_PIN = getValue(rc,'master_pin').asString();
+  window.__CC_PIN     = getValue(rc,'cc_pin').asString();
+  window.__SM_KEY     = getValue(rc,'sm_api_key').asString();
+  window.__PROXY_URL  = getValue(rc,'sm_proxy_url').asString();
+  window.__FS_URL     = getValue(rc,'firestore_proxy_url').asString();
   dot.classList.add('ok');
   window.__RC_READY = true;
   window.dispatchEvent(new Event('rc-ready'));
 } catch(e) {
   dot.classList.add('err');
-  console.error('Remote Config:', e);
+  console.error('Remote Config:',e);
   window.__RC_READY = false;
   window.dispatchEvent(new Event('rc-ready'));
 }
@@ -527,7 +1211,6 @@ try {
 
 <script>
 const TIER_LABELS = ['Small (0–2,500 sq ft)','Medium (2,501–3,500 sq ft)','Large (3,501–4,500 sq ft)','XL (4,501+ sq ft)'];
-
 const SERVICES_DEFAULT = [
   { cat:'Windows', items:[
     {id:'win-ie',  name:'Interior & Exterior',       prices:[250,450,560,null], pp:false},
@@ -567,480 +1250,350 @@ const SERVICES_DEFAULT = [
   ]}
 ];
 
-// State
-let loginMode = 'location';
-let pinBuffer = '';
-let currentRole = null;       // 'master' | 'cc' | 'owner'
-let currentLocId = null;
-let currentLocData = null;
-let allLocations = [];
-let services = JSON.parse(JSON.stringify(SERVICES_DEFAULT));
-let tier = 0;
-let canEdit = false;
-let editMode = false;
-let selected = {};
-let quantities = {};
-let unsaved = false;
-let currentContactId = null;
-let lastSearch = '';
+let loginMode='location', pinBuffer='', currentRole=null, currentLocId=null, currentLocData=null;
+let allLocations=[], services=JSON.parse(JSON.stringify(SERVICES_DEFAULT));
+let tier=0, canEdit=false, editMode=false, selected={}, quantities={}, unsaved=false;
+let currentContactId=null, lastSearch='';
 
-// ── LOGIN ──────────────────────────────────────────────────────────────────
+// Dark mode
+function initDarkMode() {
+  const saved = localStorage.getItem('wh_theme');
+  if (saved === 'dark') { document.documentElement.setAttribute('data-theme','dark'); updateDmBtn(); }
+}
+function toggleDarkMode() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (isDark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('wh_theme','light'); }
+  else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('wh_theme','dark'); }
+  updateDmBtn();
+}
+function updateDmBtn() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.getElementById('dmBtn').textContent = isDark ? '☀' : '☾';
+}
 
+// LOGIN
 function setLoginMode(mode) {
-  loginMode = mode;
-  ['location','master','cc'].forEach(m => document.getElementById(`tab-${m}`).classList.toggle('active', m===mode));
-  document.getElementById('location-select-wrap').style.display = mode==='location' ? 'block' : 'none';
-  document.getElementById('loginHint').textContent = mode==='location' ? 'Enter your location PIN' : mode==='master' ? 'Enter master PIN' : 'Enter call center PIN';
-  numClear();
-  hideLoginError();
+  loginMode=mode;
+  ['location','master','cc'].forEach(m=>document.getElementById('tab-'+m).classList.toggle('active',m===mode));
+  document.getElementById('location-select-wrap').style.display=mode==='location'?'block':'none';
+  document.getElementById('loginHint').textContent=mode==='location'?'Enter your location PIN':mode==='master'?'Enter master PIN':'Enter call center PIN';
+  numClear(); hideLoginError();
 }
 
 function numPress(d) {
-  if (pinBuffer.length >= 4) return;
-  pinBuffer += d;
-  updatePinDisplay();
-  if (pinBuffer.length === 4) setTimeout(attemptLogin, 150);
+  if(pinBuffer.length>=4)return;
+  pinBuffer+=d; updatePinDisplay();
+  if(pinBuffer.length===4)setTimeout(attemptLogin,150);
 }
-function numDel() { pinBuffer = pinBuffer.slice(0,-1); updatePinDisplay(); }
-function numClear() { pinBuffer = ''; updatePinDisplay(); }
+function numDel(){pinBuffer=pinBuffer.slice(0,-1);updatePinDisplay();}
+function numClear(){pinBuffer='';updatePinDisplay();}
 
 function updatePinDisplay() {
-  for (let i=0;i<4;i++) {
-    const d = document.getElementById(`pd${i}`);
-    d.classList.toggle('filled', i < pinBuffer.length);
-    d.textContent = i < pinBuffer.length ? '●' : '·';
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('pd'+i);
+    d.classList.toggle('filled',i<pinBuffer.length);
+    d.textContent=i<pinBuffer.length?'●':'·';
   }
 }
 
 function showLoginError(msg) {
-  const el = document.getElementById('loginError');
-  el.textContent = msg; el.classList.add('visible');
-  for (let i=0;i<4;i++) document.getElementById(`pd${i}`).classList.add('error');
-  setTimeout(() => {
-    el.classList.remove('visible');
-    for (let i=0;i<4;i++) document.getElementById(`pd${i}`).classList.remove('error');
-  }, 1800);
-  pinBuffer = ''; updatePinDisplay();
+  const el=document.getElementById('loginError');
+  el.textContent=msg; el.classList.add('visible');
+  for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.add('error');
+  setTimeout(()=>{el.classList.remove('visible');for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.remove('error');},1800);
+  pinBuffer=''; updatePinDisplay();
 }
-function hideLoginError() { document.getElementById('loginError').classList.remove('visible'); }
+function hideLoginError(){document.getElementById('loginError').classList.remove('visible');}
 
 async function attemptLogin() {
-  if (!window.__RC_READY) { showLoginError('Still connecting, please wait…'); return; }
-
-  if (loginMode === 'master') {
-    if (pinBuffer === window.__MASTER_PIN) { enterApp('master', null); }
-    else showLoginError('Incorrect master PIN');
-    return;
-  }
-  if (loginMode === 'cc') {
-    if (pinBuffer === window.__CC_PIN) { enterApp('cc', null); }
+  if(!window.__RC_READY){showLoginError('Still connecting, please wait…');return;}
+  if(loginMode==='master'){if(pinBuffer===window.__MASTER_PIN)enterApp('master',null);else showLoginError('Incorrect master PIN');return;}
+  if(loginMode==='cc'){if(pinBuffer===window.__CC_PIN)enterApp('cc',null);else showLoginError('Incorrect PIN');return;}
+  const locId=document.getElementById('locationSelect').value;
+  if(!locId){showLoginError('Please select a location first');return;}
+  if(!window.__FS_URL){showLoginError('Not connected to database');return;}
+  try{
+    const res=await fsCall('verify_pin',locId,{pin:pinBuffer});
+    if(res.valid)enterApp('owner',locId,res.location);
     else showLoginError('Incorrect PIN');
-    return;
-  }
-  // Location mode
-  const locId = document.getElementById('locationSelect').value;
-  if (!locId) { showLoginError('Please select a location first'); return; }
-  if (!window.__FS_URL) { showLoginError('Not connected to database'); return; }
-
-  try {
-    const res = await fsCall('verify_pin', locId, { pin: pinBuffer });
-    if (res.valid) { enterApp('owner', locId, res.location); }
-    else showLoginError('Incorrect PIN');
-  } catch(e) { showLoginError('Connection error — try again'); }
+  }catch(e){showLoginError('Connection error — try again');}
 }
 
-async function enterApp(role, locId, locData) {
-  currentRole = role;
-  currentLocId = locId;
-  currentLocData = locData || null;
-  canEdit = (role === 'master' || role === 'owner');
-  editMode = false;
-
-  document.getElementById('loginScreen').style.display = 'none';
+async function enterApp(role,locId,locData) {
+  currentRole=role; currentLocId=locId; currentLocData=locData||null;
+  canEdit=(role==='master'||role==='owner'); editMode=false;
+  document.getElementById('loginScreen').style.display='none';
   document.getElementById('appShell').classList.add('visible');
-
-  const rb = document.getElementById('roleBadge');
-  rb.className = 'role-badge ' + role;
-  rb.textContent = role === 'master' ? 'Franchisor' : role === 'cc' ? 'Call Center' : 'Owner';
-
-  const etw = document.getElementById('editToggleWrap');
-  etw.style.display = canEdit ? 'flex' : 'none';
-
-  // Settings gear — visible for owner and master
-  const settingsBtn = document.getElementById('settingsBtn');
-  settingsBtn.style.display = (role === 'owner' || role === 'master') ? 'block' : 'none';
-
-  const ls = document.getElementById('locSwitcher');
-  if (role === 'master' || role === 'cc') {
-    ls.classList.add('visible');
-    populateLocSwitcher();
-  } else {
-    ls.classList.remove('visible');
-  }
-
-  if (role === 'owner' && locData) {
+  const rb=document.getElementById('roleBadge');
+  rb.className='role-badge '+role;
+  rb.textContent=role==='master'?'Franchisor':role==='cc'?'Call Center':'Owner';
+  document.getElementById('editToggleWrap').style.display=canEdit?'flex':'none';
+  document.getElementById('settingsBtn').style.display=(role==='owner'||role==='master')?'block':'none';
+  const ls=document.getElementById('locSwitcher');
+  if(role==='master'||role==='cc'){ls.classList.add('visible');populateLocSwitcher();}
+  else ls.classList.remove('visible');
+  if(role==='owner'&&locData){
     loadLocationData(locData);
-    document.getElementById('headerLocName').textContent = '· ' + locData.name;
-    // Show first-login modal if still on default PIN
-    if (pinBuffer === '1234') {
-      document.getElementById('firstPinMsg').textContent = '';
-      document.getElementById('firstNewPin').value = '';
-      document.getElementById('firstConfirmPin').value = '';
-      document.getElementById('modalFirstLogin').style.display = 'flex';
+    document.getElementById('headerLocName').textContent=locData.name;
+    if(pinBuffer==='1234'){
+      document.getElementById('firstPinMsg').textContent='';
+      document.getElementById('firstNewPin').value='';
+      document.getElementById('firstConfirmPin').value='';
+      document.getElementById('modalFirstLogin').style.display='flex';
     }
-  } else if (role === 'master' || role === 'cc') {
-    document.getElementById('headerLocName').textContent = '';
-    if (allLocations.length > 0) await switchLocation(allLocations[0].id);
+  } else if(role==='master'||role==='cc'){
+    document.getElementById('headerLocName').textContent='Pricing Calculator';
+    if(allLocations.length>0)await switchLocation(allLocations[0].id);
   }
 }
 
-function populateLocSwitcher() {
-  const sel = document.getElementById('locSwitcherSelect');
-  sel.innerHTML = '<option value="">— Select location —</option>' +
-    allLocations.map(l => `<option value="${l.id}">${l.state} — ${l.name}</option>`).join('');
+function populateLocSwitcher(){
+  const sel=document.getElementById('locSwitcherSelect');
+  sel.innerHTML='<option value="">— Select location —</option>'+allLocations.map(l=>`<option value="${l.id}">${l.state} — ${l.name}</option>`).join('');
 }
 
-async function switchLocation(locId) {
-  if (!locId) return;
-  currentLocId = locId;
-  try {
-    const res = await fsCall('get_location', locId);
-    currentLocData = res.location;
-    loadLocationData(res.location);
-    document.getElementById('headerLocName').textContent = '· ' + res.location.name;
-    document.getElementById('locSwitcherSelect').value = locId;
-    // Update PIN change panel target
-    document.getElementById('pinMsg').textContent = '';
-  } catch(e) { showToast('Could not load location data'); }
+async function switchLocation(locId){
+  if(!locId)return; currentLocId=locId;
+  try{
+    const res=await fsCall('get_location',locId);
+    currentLocData=res.location; loadLocationData(res.location);
+    document.getElementById('headerLocName').textContent=res.location.name;
+    document.getElementById('locSwitcherSelect').value=locId;
+  }catch(e){showToast('Could not load location data');}
 }
 
-function loadLocationData(loc) {
-  services = JSON.parse(JSON.stringify(SERVICES_DEFAULT));
-  if (loc.prices) {
-    services.forEach(cat => cat.items.forEach(item => {
-      if (loc.prices[item.id]) item.prices = loc.prices[item.id];
-    }));
-  }
-  selected = {}; quantities = {}; unsaved = false;
+function loadLocationData(loc){
+  services=JSON.parse(JSON.stringify(SERVICES_DEFAULT));
+  if(loc.prices)services.forEach(cat=>cat.items.forEach(item=>{if(loc.prices[item.id])item.prices=loc.prices[item.id];}));
+  selected={}; quantities={}; unsaved=false;
   renderServices(); renderQuote(); setTier(0);
 }
 
-function logout() {
-  currentRole = null; currentLocId = null; currentLocData = null;
-  services = JSON.parse(JSON.stringify(SERVICES_DEFAULT));
-  selected = {}; quantities = {}; editMode = false; canEdit = false;
-  pinBuffer = ''; updatePinDisplay();
+function logout(){
+  currentRole=null; currentLocId=null; currentLocData=null;
+  services=JSON.parse(JSON.stringify(SERVICES_DEFAULT));
+  selected={}; quantities={}; editMode=false; canEdit=false;
+  pinBuffer=''; updatePinDisplay();
   document.getElementById('appShell').classList.remove('visible');
-  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginScreen').style.display='flex';
   document.getElementById('editToggle').classList.remove('on');
   document.body.classList.remove('can-edit');
-  setLoginMode('location');
-  clearCustomer();
+  setLoginMode('location'); clearCustomer();
 }
 
-// ── FIRESTORE PROXY ────────────────────────────────────────────────────────
-
-async function fsCall(action, locationId, data) {
-  const url = window.__FS_URL;
-  if (!url) throw new Error('Firestore proxy not configured');
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action, locationId, data })
-  });
-  if (!resp.ok) throw new Error(`Proxy error ${resp.status}`);
+// FIRESTORE
+async function fsCall(action,locationId,data){
+  const url=window.__FS_URL;
+  if(!url)throw new Error('Firestore proxy not configured');
+  const resp=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,locationId,data})});
+  if(!resp.ok)throw new Error('Proxy error '+resp.status);
   return resp.json();
 }
 
-async function loadAllLocations() {
-  try {
-    const res = await fsCall('list_locations');
-    allLocations = res.locations || [];
-    // Populate login dropdown
-    const sel = document.getElementById('locationSelect');
-    // Group by state
-    const byState = {};
-    allLocations.forEach(l => {
-      if (!byState[l.state]) byState[l.state] = [];
-      byState[l.state].push(l);
+async function loadAllLocations(){
+  try{
+    const res=await fsCall('list_locations');
+    allLocations=res.locations||[];
+    const sel=document.getElementById('locationSelect');
+    const byState={};
+    allLocations.forEach(l=>{if(!byState[l.state])byState[l.state]=[];byState[l.state].push(l);});
+    let opts='<option value="">— Choose a location —</option>';
+    Object.keys(byState).sort().forEach(state=>{
+      opts+=`<optgroup label="${state}">`;
+      byState[state].forEach(l=>{opts+=`<option value="${l.id}">${l.name}</option>`;});
+      opts+='</optgroup>';
     });
-    let opts = '<option value="">— Choose a location —</option>';
-    Object.keys(byState).sort().forEach(state => {
-      opts += `<optgroup label="${state}">`;
-      byState[state].forEach(l => { opts += `<option value="${l.id}">${l.name}</option>`; });
-      opts += '</optgroup>';
-    });
-    sel.innerHTML = opts;
-  } catch(e) { console.error('Could not load locations', e); }
+    sel.innerHTML=opts;
+  }catch(e){console.error('Could not load locations',e);}
 }
 
-// ── PRICES ─────────────────────────────────────────────────────────────────
-
-async function savePrices() {
-  if (!currentLocId) return;
-  const prices = {};
-  services.forEach(cat => cat.items.forEach(item => { prices[item.id] = item.prices; }));
-  try {
-    await fsCall('save_prices', currentLocId, { prices });
-    unsaved = false;
-    document.getElementById('saveBanner').classList.remove('on');
+// PRICES
+async function savePrices(){
+  if(!currentLocId)return;
+  const prices={};
+  services.forEach(cat=>cat.items.forEach(item=>{prices[item.id]=item.prices;}));
+  try{
+    await fsCall('save_prices',currentLocId,{prices});
+    unsaved=false; document.getElementById('saveBanner').classList.remove('on');
     showToast('Prices saved');
-  } catch(e) { showToast('Save failed — ' + e.message); }
+  }catch(e){showToast('Save failed — '+e.message);}
 }
 
-// ── SETTINGS & PIN CHANGE ──────────────────────────────────────────────────
-
-function openSettings() {
-  const locName = currentLocData ? currentLocData.name : '';
-  document.getElementById('settingsLocName').textContent = locName;
-  document.getElementById('settingsPinMsg').textContent = '';
-  document.getElementById('settingsCurrentPin').value = '';
-  document.getElementById('settingsNewPin').value = '';
-  document.getElementById('settingsConfirmPin').value = '';
-  // Master skips current PIN field
-  document.getElementById('settingsCurrentWrap').style.display = currentRole === 'master' ? 'none' : 'flex';
+// SETTINGS & PIN
+function openSettings(){
+  const locName=currentLocData?currentLocData.name:'';
+  document.getElementById('settingsLocName').textContent=locName;
+  document.getElementById('settingsPinMsg').textContent='';
+  document.getElementById('settingsCurrentPin').value='';
+  document.getElementById('settingsNewPin').value='';
+  document.getElementById('settingsConfirmPin').value='';
+  document.getElementById('settingsCurrentWrap').style.display=currentRole==='master'?'none':'flex';
   document.getElementById('modalSettings').classList.add('open');
 }
 
-async function saveSettingsPin() {
-  const newPin = document.getElementById('settingsNewPin').value.trim();
-  const confirmPin = document.getElementById('settingsConfirmPin').value.trim();
-  const msg = document.getElementById('settingsPinMsg');
-  if (!/^\d{4}$/.test(newPin)) { msg.className='pin-msg err'; msg.textContent='PIN must be exactly 4 digits'; return; }
-  if (newPin !== confirmPin) { msg.className='pin-msg err'; msg.textContent='PINs do not match'; return; }
-  try {
+async function saveSettingsPin(){
+  const newPin=document.getElementById('settingsNewPin').value.trim();
+  const confirmPin=document.getElementById('settingsConfirmPin').value.trim();
+  const msg=document.getElementById('settingsPinMsg');
+  if(!/^\d{4}$/.test(newPin)){msg.className='pin-msg err';msg.textContent='PIN must be exactly 4 digits';return;}
+  if(newPin!==confirmPin){msg.className='pin-msg err';msg.textContent='PINs do not match';return;}
+  try{
     let res;
-    if (currentRole === 'master') {
-      res = await fsCall('master_change_pin', currentLocId, { newPin });
-    } else {
-      const currentPin = document.getElementById('settingsCurrentPin').value.trim();
-      if (!currentPin) { msg.className='pin-msg err'; msg.textContent='Enter your current PIN'; return; }
-      res = await fsCall('change_pin', currentLocId, { currentPin, newPin });
+    if(currentRole==='master')res=await fsCall('master_change_pin',currentLocId,{newPin});
+    else{
+      const currentPin=document.getElementById('settingsCurrentPin').value.trim();
+      if(!currentPin){msg.className='pin-msg err';msg.textContent='Enter your current PIN';return;}
+      res=await fsCall('change_pin',currentLocId,{currentPin,newPin});
     }
-    if (res.success) {
-      msg.className='pin-msg ok'; msg.textContent='PIN updated successfully';
-      setTimeout(() => closeModal('modalSettings'), 1500);
-      showToast('PIN updated');
-    } else {
-      msg.className='pin-msg err'; msg.textContent = res.error || 'Could not update PIN';
-    }
-  } catch(e) { msg.className='pin-msg err'; msg.textContent='Error: '+e.message; }
+    if(res.success){msg.className='pin-msg ok';msg.textContent='PIN updated successfully';setTimeout(()=>closeModal('modalSettings'),1500);showToast('PIN updated');}
+    else{msg.className='pin-msg err';msg.textContent=res.error||'Could not update PIN';}
+  }catch(e){msg.className='pin-msg err';msg.textContent='Error: '+e.message;}
 }
 
-async function saveFirstPin() {
-  const newPin = document.getElementById('firstNewPin').value.trim();
-  const confirmPin = document.getElementById('firstConfirmPin').value.trim();
-  const msg = document.getElementById('firstPinMsg');
-  if (!/^\d{4}$/.test(newPin)) { msg.className='pin-msg err'; msg.textContent='PIN must be exactly 4 digits'; return; }
-  if (newPin === '1234') { msg.className='pin-msg err'; msg.textContent='Please choose a different PIN than the default'; return; }
-  if (newPin !== confirmPin) { msg.className='pin-msg err'; msg.textContent='PINs do not match'; return; }
-  try {
-    const res = await fsCall('change_pin', currentLocId, { currentPin: '1234', newPin });
-    if (res.success) {
-      msg.className='pin-msg ok'; msg.textContent='PIN set successfully!';
-      setTimeout(() => {
-        document.getElementById('modalFirstLogin').style.display = 'none';
-        showToast('PIN set — you\'re all set!');
-      }, 1200);
-    } else {
-      msg.className='pin-msg err'; msg.textContent = res.error || 'Could not set PIN';
-    }
-  } catch(e) { msg.className='pin-msg err'; msg.textContent='Error: '+e.message; }
+async function saveFirstPin(){
+  const newPin=document.getElementById('firstNewPin').value.trim();
+  const confirmPin=document.getElementById('firstConfirmPin').value.trim();
+  const msg=document.getElementById('firstPinMsg');
+  if(!/^\d{4}$/.test(newPin)){msg.className='pin-msg err';msg.textContent='PIN must be exactly 4 digits';return;}
+  if(newPin==='1234'){msg.className='pin-msg err';msg.textContent='Please choose a different PIN than the default';return;}
+  if(newPin!==confirmPin){msg.className='pin-msg err';msg.textContent='PINs do not match';return;}
+  try{
+    const res=await fsCall('change_pin',currentLocId,{currentPin:'1234',newPin});
+    if(res.success){msg.className='pin-msg ok';msg.textContent='PIN set successfully!';setTimeout(()=>{document.getElementById('modalFirstLogin').style.display='none';showToast('PIN set — you\'re all set!');},1200);}
+    else{msg.className='pin-msg err';msg.textContent=res.error||'Could not set PIN';}
+  }catch(e){msg.className='pin-msg err';msg.textContent='Error: '+e.message;}
 }
 
-// ── SERVICEMINDER ──────────────────────────────────────────────────────────
-
-async function smCall(endpoint, payload) {
-  // Use location-specific SM key if available, fall back to global
-  const apiKey = (currentLocData && currentLocData.smApiKey) || window.__SM_KEY;
-  const proxyUrl = window.__PROXY_URL;
-  if (!apiKey || !proxyUrl) throw new Error('ServiceMinder not configured for this location');
-  const resp = await fetch(proxyUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ endpoint, payload: { ...payload, ApiKey: apiKey } })
-  });
-  if (!resp.ok) throw new Error(`Proxy error ${resp.status}`);
+// SERVICEMINDER
+async function smCall(endpoint,payload){
+  const apiKey=(currentLocData&&currentLocData.smApiKey)||window.__SM_KEY;
+  const proxyUrl=window.__PROXY_URL;
+  if(!apiKey||!proxyUrl)throw new Error('ServiceMinder not configured for this location');
+  const resp=await fetch(proxyUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint,payload:{...payload,ApiKey:apiKey}})});
+  if(!resp.ok)throw new Error('Proxy error '+resp.status);
   return resp.json();
 }
 
-function setSmStatus(type, title, detail) {
-  const icons = { found:'✓', created:'★', error:'✕', loading:'…' };
-  const el = document.getElementById('smStatus');
-  el.className = `sm-status visible ${type}`;
-  document.getElementById('smIcon').textContent = icons[type]||'•';
-  document.getElementById('smTitle').textContent = title;
-  document.getElementById('smDetail').textContent = detail;
+function setSmStatus(type,title,detail){
+  const icons={found:'✓',created:'★',error:'✕',loading:'…'};
+  const el=document.getElementById('smStatus');
+  el.className='sm-status visible '+type;
+  document.getElementById('smIcon').textContent=icons[type]||'•';
+  document.getElementById('smTitle').textContent=title;
+  document.getElementById('smDetail').textContent=detail;
 }
-function clearSmStatus() {
-  document.getElementById('smStatus').classList.remove('visible');
-  document.getElementById('historySection').classList.remove('visible');
-}
+function clearSmStatus(){document.getElementById('smStatus').classList.remove('visible');document.getElementById('historySection').classList.remove('visible');}
 
-async function searchCustomer() {
-  const q = document.getElementById('searchInput').value.trim();
-  if (!q) return;
-  lastSearch = q;
-  document.getElementById('searchBtn').disabled = true;
+async function searchCustomer(){
+  const q=document.getElementById('searchInput').value.trim();
+  if(!q)return; lastSearch=q;
+  document.getElementById('searchBtn').disabled=true;
   setSmStatus('loading','Searching ServiceMinder…','');
-  try {
-    const data = await smCall('contacts/locate', { NameSearch: q, Matches: [] });
-    document.getElementById('searchBtn').disabled = false;
-    if (data.ResultCode===0 && data.Matches && data.Matches.length>0) showSearchResults(data.Matches);
+  try{
+    const data=await smCall('contacts/locate',{NameSearch:q,Matches:[]});
+    document.getElementById('searchBtn').disabled=false;
+    if(data.ResultCode===0&&data.Matches&&data.Matches.length>0)showSearchResults(data.Matches);
     else showNoResults(q);
-  } catch(e) {
-    document.getElementById('searchBtn').disabled = false;
-    setSmStatus('error','Search failed',e.message);
-  }
+  }catch(e){document.getElementById('searchBtn').disabled=false;setSmStatus('error','Search failed',e.message);}
 }
 
-function showSearchResults(matches) {
+function showSearchResults(matches){
   clearSmStatus();
-  document.getElementById('searchTitle').textContent = `${matches.length} customer${matches.length!==1?'s':''} found`;
-  document.getElementById('searchSub').textContent = `Search: "${lastSearch}"`;
-  document.getElementById('createProspectBtn').style.display = 'none';
-  document.getElementById('searchBody').innerHTML = matches.slice(0,8).map((m,i)=>`
-    <div class="result-card" onclick="selectCustomer(${i})">
-      <div class="result-name">${m.Name||'—'}</div>
-      <div class="result-detail">${[m.Address1,m.City,m.State].filter(Boolean).join(', ')||'No address'} ${m.Zip||''}</div>
-      <div class="result-detail">${m.Phone||''} ${m.Email?'· '+m.Email:''}</div>
-    </div>`).join('');
-  window.__searchMatches = matches;
+  document.getElementById('searchTitle').textContent=matches.length+' customer'+(matches.length!==1?'s':'')+' found';
+  document.getElementById('searchSub').textContent='Search: "'+lastSearch+'"';
+  document.getElementById('createProspectBtn').style.display='none';
+  document.getElementById('searchBody').innerHTML=matches.slice(0,8).map((m,i)=>`<div class="result-card" onclick="selectCustomer(${i})"><div class="result-name">${m.Name||'—'}</div><div class="result-detail">${[m.Address1,m.City,m.State].filter(Boolean).join(', ')||'No address'} ${m.Zip||''}</div><div class="result-detail">${m.Phone||''} ${m.Email?'· '+m.Email:''}</div></div>`).join('');
+  window.__searchMatches=matches;
   document.getElementById('modalSearch').classList.add('open');
 }
 
-function selectCustomer(i) {
-  const m = window.__searchMatches[i];
-  currentContactId = m.ContactId||m.Id||null;
-  document.getElementById('custName').value    = m.Name||'';
-  document.getElementById('custAddress').value = m.Address1||'';
-  document.getElementById('custCity').value    = m.City||'';
-  document.getElementById('custZip').value     = m.Zip||'';
-  document.getElementById('custPhone').value   = m.Phone||'';
-  document.getElementById('custEmail').value   = m.Email||'';
-  updateQHeader();
-  closeModal('modalSearch');
-  setSmStatus('found','Customer found in ServiceMinder',`ID: ${currentContactId||'—'}`);
-  if (currentContactId) loadHistory(currentContactId);
+function selectCustomer(i){
+  const m=window.__searchMatches[i];
+  currentContactId=m.ContactId||m.Id||null;
+  document.getElementById('custName').value=m.Name||'';
+  document.getElementById('custAddress').value=m.Address1||'';
+  document.getElementById('custCity').value=m.City||'';
+  document.getElementById('custZip').value=m.Zip||'';
+  document.getElementById('custPhone').value=m.Phone||'';
+  document.getElementById('custEmail').value=m.Email||'';
+  updateQHeader(); closeModal('modalSearch');
+  setSmStatus('found','Customer found in ServiceMinder','ID: '+(currentContactId||'—'));
+  if(currentContactId)loadHistory(currentContactId);
 }
 
-async function loadHistory(contactId) {
-  try {
-    const data = await smCall('appointments/query',{ContactId:contactId,IncludeCompleted:true,Matches:[]});
-    const list = document.getElementById('historyList');
-    if (data.Matches&&data.Matches.length>0) {
-      list.innerHTML = data.Matches.sort((a,b)=>new Date(b.Date||0)-new Date(a.Date||0)).slice(0,5).map(a=>`
-        <div class="history-item">
-          <span style="font-weight:500">${a.ServiceName||a.Description||'Service'}</span>
-          <span style="color:var(--grey)">${a.Date?new Date(a.Date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}</span>
-        </div>`).join('');
-    } else {
-      list.innerHTML = '<div class="history-empty">No past services on record.</div>';
-    }
+async function loadHistory(contactId){
+  try{
+    const data=await smCall('appointments/query',{ContactId:contactId,IncludeCompleted:true,Matches:[]});
+    const list=document.getElementById('historyList');
+    if(data.Matches&&data.Matches.length>0){
+      list.innerHTML=data.Matches.sort((a,b)=>new Date(b.Date||0)-new Date(a.Date||0)).slice(0,5).map(a=>`<div class="history-item"><span class="history-item-name">${a.ServiceName||a.Description||'Service'}</span><span class="history-item-date">${a.Date?new Date(a.Date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}</span></div>`).join('');
+    }else{list.innerHTML='<div class="history-empty">No past services on record.</div>';}
     document.getElementById('historySection').classList.add('visible');
-  } catch(e) {}
+  }catch(e){}
 }
 
-function showNoResults(q) {
+function showNoResults(q){
   clearSmStatus();
-  document.getElementById('searchTitle').textContent = 'No customers found';
-  document.getElementById('searchSub').textContent = `Search: "${q}"`;
-  document.getElementById('searchBody').innerHTML = `<p>No existing customers matched "<strong>${q}</strong>" in ServiceMinder.<br><br>Fill in the customer details and click <strong>Create as New Prospect</strong> to add them.</p>`;
-  document.getElementById('createProspectBtn').style.display = 'block';
+  document.getElementById('searchTitle').textContent='No customers found';
+  document.getElementById('searchSub').textContent='Search: "'+q+'"';
+  document.getElementById('searchBody').innerHTML='<p>No existing customers matched "<strong>'+q+'</strong>" in ServiceMinder.<br><br>Fill in the customer details and click <strong>Create as New Prospect</strong> to add them.</p>';
+  document.getElementById('createProspectBtn').style.display='block';
   document.getElementById('modalSearch').classList.add('open');
 }
 
-async function createProspect() {
-  const name = document.getElementById('custName').value.trim()||lastSearch;
-  if (!name) { showToast('Enter a customer name first'); return; }
-  const btn = document.getElementById('createProspectBtn');
+async function createProspect(){
+  const name=document.getElementById('custName').value.trim()||lastSearch;
+  if(!name){showToast('Enter a customer name first');return;}
+  const btn=document.getElementById('createProspectBtn');
   btn.disabled=true; btn.textContent='Creating…';
-  try {
-    const data = await smCall('contacts/addupdate',{Matches:[{
-      Name:name,
-      Address1:document.getElementById('custAddress').value.trim(),
-      City:document.getElementById('custCity').value.trim(),
-      Zip:document.getElementById('custZip').value.trim(),
-      Phone:document.getElementById('custPhone').value.trim(),
-      Email:document.getElementById('custEmail').value.trim(),
-      IsPrimary:true
-    }]});
+  try{
+    const data=await smCall('contacts/addupdate',{Matches:[{Name:name,Address1:document.getElementById('custAddress').value.trim(),City:document.getElementById('custCity').value.trim(),Zip:document.getElementById('custZip').value.trim(),Phone:document.getElementById('custPhone').value.trim(),Email:document.getElementById('custEmail').value.trim(),IsPrimary:true}]});
     closeModal('modalSearch');
-    if (data.ResultCode===0||data.Matches?.[0]?.ContactId) {
-      currentContactId = data.Matches?.[0]?.ContactId||null;
-      document.getElementById('custName').value = name;
-      updateQHeader();
-      setSmStatus('created','New prospect created in ServiceMinder',name);
-      showToast('Prospect created');
-    } else {
-      setSmStatus('error','Could not create prospect',data.Message||'Unknown error');
-    }
-  } catch(e) { closeModal('modalSearch'); setSmStatus('error','Creation failed',e.message); }
+    if(data.ResultCode===0||data.Matches?.[0]?.ContactId){currentContactId=data.Matches?.[0]?.ContactId||null;document.getElementById('custName').value=name;updateQHeader();setSmStatus('created','New prospect created in ServiceMinder',name);showToast('Prospect created');}
+    else setSmStatus('error','Could not create prospect',data.Message||'Unknown error');
+  }catch(e){closeModal('modalSearch');setSmStatus('error','Creation failed',e.message);}
   btn.disabled=false; btn.textContent='Create as New Prospect';
 }
 
-// ── SERVICES & QUOTE ───────────────────────────────────────────────────────
-
-function setTier(t) {
+// SERVICES & QUOTE
+function setTier(t){
   tier=t;
   document.querySelectorAll('.size-btn').forEach((b,i)=>b.classList.toggle('active',i===t));
   updateQHeader(); renderServices(); renderQuote();
 }
 
-function getPrice(item) {
-  if (item.os) return null;
-  const p = item.prices[tier];
-  return (p===null||p===undefined)?null:p;
+function getPrice(item){
+  if(item.os)return null;
+  const p=item.prices[tier];
+  return(p===null||p===undefined)?null:p;
 }
 
-function renderServices() {
-  const panel = document.getElementById('svcPanel');
+function renderServices(){
+  const panel=document.getElementById('svcPanel');
   panel.innerHTML='';
   services.forEach((cat,ci)=>{
-    const sc = cat.items.filter(i=>selected[i.id]).length;
-    const div = document.createElement('div');
+    const sc=cat.items.filter(i=>selected[i.id]).length;
+    const div=document.createElement('div');
     div.className='cat';
-    div.innerHTML=`
-      <div class="cat-hdr" onclick="toggleCat(${ci})">
-        <span class="cat-name">${cat.cat}</span>
-        <span class="cat-cnt ${sc>0?'on':''}" id="cc${ci}">${sc}</span>
-        <svg class="chev ${ci<3?'open':''}" id="chev${ci}" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg>
-      </div>
-      <div class="svc-rows ${ci<3?'open':''}" id="cr${ci}"></div>`;
-    const rows=div.querySelector(`#cr${ci}`);
+    div.innerHTML=`<div class="cat-hdr" onclick="toggleCat(${ci})"><span class="cat-name">${cat.cat}</span><span class="cat-cnt ${sc>0?'on':''}" id="cc${ci}">${sc}</span><svg class="chev ${ci<3?'open':''}" id="chev${ci}" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 8 10 12 6"/></svg></div><div class="svc-rows ${ci<3?'open':''}" id="cr${ci}"></div>`;
+    const rows=div.querySelector('#cr'+ci);
     cat.items.forEach((item,ii)=>{
-      const price=getPrice(item), isOs=price===null, chk=!!selected[item.id], qty=quantities[item.id]||1;
+      const price=getPrice(item),isOs=price===null,chk=!!selected[item.id],qty=quantities[item.id]||1;
       const row=document.createElement('div');
-      row.className=`svc-row ${chk?'checked':''}`;
+      row.className='svc-row '+(chk?'checked':'');
       row.onclick=e=>{if(e.target.classList.contains('qbtn')||e.target.tagName==='INPUT')return;toggleSvc(item.id);};
-      row.innerHTML=`
-        <div class="cb"><svg width="10" height="8" viewBox="0 0 11 9" fill="none"><polyline points="1 4.5 4 7.5 10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <span class="svc-nm">${item.name}${item.pp?'<span style="font-size:11px;color:var(--grey)"> /panel</span>':''}</span>
-        ${item.pp?`<div class="pqty" style="${chk?'display:flex':'display:none'}">
-          <button class="qbtn" onclick="chQty('${item.id}',-1)">−</button>
-          <span class="qval" id="qv${item.id}">${qty}</span>
-          <button class="qbtn" onclick="chQty('${item.id}',1)">+</button>
-        </div>`:'<div></div>'}
-        <div style="text-align:right">
-          ${isOs?`<span class="onsite-badge">On-site</span>`
-            :`<span class="price-disp" id="pd${item.id}">$${price}</span>
-              <input class="price-inp" type="number" value="${price}" min="0" step="5"
-                onchange="updPrice('${item.id}',${ci},${ii},this.value)" onclick="event.stopPropagation()" />`}
-        </div>`;
+      row.innerHTML=`<div class="cb"><svg width="10" height="8" viewBox="0 0 11 9" fill="none"><polyline points="1 4.5 4 7.5 10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="svc-nm">${item.name}${item.pp?'<span style="font-size:10px;color:var(--text-muted)"> /panel</span>':''}</span>${item.pp?`<div class="pqty" style="${chk?'display:flex':'display:none'}"><button class="qbtn" onclick="chQty('${item.id}',-1)">−</button><span class="qval" id="qv${item.id}">${qty}</span><button class="qbtn" onclick="chQty('${item.id}',1)">+</button></div>`:'<div></div>'}<div style="text-align:right">${isOs?'<span class="onsite-badge">On-site</span>':`<span class="price-disp" id="pd${item.id}">$${price}</span><input class="price-inp" type="number" value="${price}" min="0" step="5" onchange="updPrice('${item.id}',${ci},${ii},this.value)" onclick="event.stopPropagation()" />`}</div>`;
       rows.appendChild(row);
     });
     panel.appendChild(div);
   });
-  document.body.classList.toggle('can-edit', editMode && canEdit);
+  document.body.classList.toggle('can-edit',editMode&&canEdit);
 }
 
-function toggleCat(ci){document.getElementById(`cr${ci}`).classList.toggle('open');document.getElementById(`chev${ci}`).classList.toggle('open');}
+function toggleCat(ci){document.getElementById('cr'+ci).classList.toggle('open');document.getElementById('chev'+ci).classList.toggle('open');}
 function toggleSvc(id){if(selected[id]){delete selected[id];delete quantities[id];}else{selected[id]=true;quantities[id]=quantities[id]||1;}renderServices();renderQuote();}
 function chQty(id,d){quantities[id]=Math.max(1,(quantities[id]||1)+d);renderServices();renderQuote();}
-function updPrice(id,ci,ii,val){
-  const n=parseFloat(val);
-  if(!isNaN(n)&&n>=0){services[ci].items[ii].prices[tier]=n;unsaved=true;document.getElementById('saveBanner').classList.add('on');renderQuote();}
-}
+function updPrice(id,ci,ii,val){const n=parseFloat(val);if(!isNaN(n)&&n>=0){services[ci].items[ii].prices[tier]=n;unsaved=true;document.getElementById('saveBanner').classList.add('on');renderQuote();}}
 
 function renderQuote(){
   const body=document.getElementById('qBody'),totalEl=document.getElementById('qTotal');
@@ -1049,12 +1602,12 @@ function renderQuote(){
     if(!selected[item.id])return;
     const price=getPrice(item),qty=quantities[item.id]||1;
     if(price===null){hasOs=true;items.push({name:item.name,price:null,os:true});}
-    else{const lt=item.pp?price*qty:price;total+=lt;items.push({name:item.pp?`${item.name} × ${qty}`:item.name,price:lt,os:false});}
+    else{const lt=item.pp?price*qty:price;total+=lt;items.push({name:item.pp?item.name+' × '+qty:item.name,price:lt,os:false});}
   }));
   if(items.length===0){body.innerHTML='<div class="empty-st"><div class="empty-icon">🪟</div><p>Select services to build the quote</p></div>';totalEl.style.display='none';document.getElementById('onsiteNote').classList.remove('on');return;}
-  body.innerHTML=items.map(qi=>`<div class="q-item"><span class="qi-nm">${qi.name}</span>${qi.os?'<span class="qi-onsite">On-site</span>':`<span class="qi-price">$${qi.price.toLocaleString()}</span>`}</div>`).join('');
+  body.innerHTML=items.map(qi=>'<div class="q-item"><span class="qi-nm">'+qi.name+'</span>'+(qi.os?'<span class="qi-onsite">On-site</span>':'<span class="qi-price">$'+qi.price.toLocaleString()+'</span>')+'</div>').join('');
   totalEl.style.display='flex';
-  document.getElementById('totAmt').textContent=`$${total.toLocaleString()}`;
+  document.getElementById('totAmt').textContent='$'+total.toLocaleString();
   document.getElementById('onsiteNote').classList.toggle('on',hasOs);
 }
 
@@ -1075,33 +1628,30 @@ function confirmNewQuote(){
   const has=Object.keys(selected).length>0||document.getElementById('custName').value.trim();
   if(!has){executeNewQuote();return;}
   const name=document.getElementById('custName').value.trim();
-  document.getElementById('newQuoteMsg').textContent=name?`The quote for ${name} will be cleared.`:'All selections will be cleared.';
+  document.getElementById('newQuoteMsg').textContent=name?'The quote for '+name+' will be cleared.':'All selections will be cleared.';
   document.getElementById('modalNewQuote').classList.add('open');
 }
 
-function executeNewQuote(){
-  selected={};quantities={};clearCustomer();renderServices();renderQuote();
-  closeModal('modalNewQuote');showToast('Ready for next customer');
-}
+function executeNewQuote(){selected={};quantities={};clearCustomer();renderServices();renderQuote();closeModal('modalNewQuote');showToast('Ready for next customer');}
 
 function copyQuote(){
   const name=document.getElementById('custName').value.trim();
   const addr=[document.getElementById('custAddress').value.trim(),document.getElementById('custCity').value.trim()].filter(Boolean).join(', ');
   const lines=['Window Hero — Service Quote'];
-  if(name)lines.push(`Customer: ${name}`);
-  if(addr)lines.push(`Address: ${addr}`);
+  if(name)lines.push('Customer: '+name);
+  if(addr)lines.push('Address: '+addr);
   const locName=currentLocData?currentLocData.name:'';
-  if(locName)lines.push(`Location: ${locName}`);
-  lines.push(`Home size: ${TIER_LABELS[tier]}`,'');
+  if(locName)lines.push('Location: '+locName);
+  lines.push('Home size: '+TIER_LABELS[tier],'');
   let total=0,hasOs=false;
   services.forEach(cat=>cat.items.forEach(item=>{
     if(!selected[item.id])return;
     const price=getPrice(item),qty=quantities[item.id]||1;
-    if(price===null){hasOs=true;lines.push(`  • ${item.name}: On-site estimate required`);}
-    else{const lt=item.pp?price*qty:price;total+=lt;lines.push(`  • ${item.name}${item.pp?` × ${qty}`:''}: $${lt.toLocaleString()}`);}
+    if(price===null){hasOs=true;lines.push('  • '+item.name+': On-site estimate required');}
+    else{const lt=item.pp?price*qty:price;total+=lt;lines.push('  • '+item.name+(item.pp?' × '+qty:'')+': $'+lt.toLocaleString());}
   }));
   if(lines.length<=5){showToast('No services selected');return;}
-  lines.push('',`Quoted total: $${total.toLocaleString()}`);
+  lines.push('','Quoted total: $'+total.toLocaleString());
   if(hasOs)lines.push('Note: On-site items require an in-person assessment.');
   navigator.clipboard.writeText(lines.join('\n')).then(()=>showToast('Quote copied to clipboard'));
 }
@@ -1109,19 +1659,13 @@ function copyQuote(){
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-// Edit toggle
-document.getElementById('editToggle').addEventListener('click', function(){
-  if(!canEdit)return;
-  editMode=!editMode;
-  this.classList.toggle('on',editMode);
-  document.body.classList.toggle('can-edit',editMode);
-});
-
+document.getElementById('editToggle').addEventListener('click',function(){if(!canEdit)return;editMode=!editMode;this.classList.toggle('on',editMode);document.body.classList.toggle('can-edit',editMode);});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('modalNewQuote');closeModal('modalSearch');}});
 
 // Init
-window.addEventListener('rc-ready', loadAllLocations);
-if(window.__RC_READY !== undefined) loadAllLocations();
+initDarkMode();
+window.addEventListener('rc-ready',loadAllLocations);
+if(window.__RC_READY!==undefined)loadAllLocations();
 </script>
 </body>
 </html>
