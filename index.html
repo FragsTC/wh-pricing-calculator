@@ -1308,6 +1308,120 @@ header {
   .brand-hero h1 { font-size:27px; }
 }
 
+
+/* ── V2 PATCH: CUSTOMER GRID, CHECKMARKS, DARK MODE SIZE TEXT ────────────── */
+.customer-panel {
+  display: block !important;
+}
+
+.cust-fields {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  width: 100% !important;
+}
+
+.cust-fields .fg {
+  min-width: 0 !important;
+}
+
+.cust-fields .fg.full {
+  grid-column: auto !important;
+}
+
+.fg input,
+.search-row input {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.search-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+.service-card.checked .cb {
+  background: var(--hh-blue) !important;
+  border-color: var(--hh-blue) !important;
+}
+
+.service-card.checked .cb svg {
+  display: block !important;
+}
+
+[data-theme="dark"] .size-btn,
+[data-theme="dark"] .size-btn .sq {
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .size-btn .rng {
+  color: #a0aec0 !important;
+}
+
+[data-theme="dark"] .size-btn.active,
+[data-theme="dark"] .size-btn.active .sq {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .size-btn.active .rng {
+  color: rgba(255,255,255,.78) !important;
+}
+
+@media (max-width: 900px) {
+  .cust-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .cust-fields {
+    grid-template-columns: 1fr !important;
+  }
+
+  .search-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .search-btn {
+    width: 100% !important;
+  }
+}
+
+
+/* ── ROLE LOCATION SELECTOR PATCH ────────────────────────────────────────── */
+.loc-switcher.visible {
+  display: flex !important;
+  max-width: 1180px;
+  margin: 14px auto 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--premium-shadow-soft, 0 8px 28px rgba(11,28,53,.08));
+}
+
+.loc-switcher select {
+  min-width: 320px;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .loc-switcher {
+  background: var(--bg-card);
+}
+
+@media(max-width:560px) {
+  .loc-switcher.visible {
+    margin: 12px 1rem 0;
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .loc-switcher select {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1734,23 +1848,39 @@ async function enterApp(role,locId,locData) {
       document.getElementById('modalFirstLogin').style.display='flex';
     }
   } else if(role==='master'||role==='cc'){
-    document.getElementById('headerLocName').textContent='Pricing Calculator';
-    if(allLocations.length>0)await switchLocation(allLocations[0].id);
+    document.getElementById('headerLocName').textContent=role==='master'?'Franchisor — Select Location':'Call Center — Select Location';
+    currentLocId=null;
+    currentLocData=null;
+    services=JSON.parse(JSON.stringify(SERVICES_DEFAULT));
+    selected={};
+    quantities={};
+    clearCustomer();
+    renderServices();
+    renderQuote();
+    showToast('Select a location to continue');
   }
 }
 
 function populateLocSwitcher(){
   const sel=document.getElementById('locSwitcherSelect');
-  sel.innerHTML='<option value="">— Select location —</option>'+allLocations.map(l=>`<option value="${l.id}">${l.state} — ${l.name}</option>`).join('');
+  const label=currentRole==='master'?'— Select location to edit —':currentRole==='cc'?'— Select location to view —':'— Select location —';
+  sel.innerHTML='<option value="">'+label+'</option>'+allLocations.map(l=>`<option value="${l.id}">${l.state} — ${l.name}</option>`).join('');
 }
 
 async function switchLocation(locId){
-  if(!locId)return; currentLocId=locId;
+  if(!locId)return;
+  currentLocId=locId;
+  canEdit=(currentRole==='master'||currentRole==='owner');
+  editMode=false;
+  document.getElementById('editToggleWrap').style.display=canEdit?'flex':'none';
+  document.getElementById('editToggle').classList.remove('on');
+  document.body.classList.remove('can-edit');
   try{
     const res=await fsCall('get_location',locId);
     currentLocData=res.location; loadLocationData(res.location);
-    document.getElementById('headerLocName').textContent=res.location.name;
+    document.getElementById('headerLocName').textContent=(currentRole==='master'?'Franchisor Editing: ':currentRole==='cc'?'Call Center Viewing: ':'')+res.location.name;
     document.getElementById('locSwitcherSelect').value=locId;
+    showToast((currentRole==='cc'?'Viewing ':'Loaded ')+res.location.name);
   }catch(e){showToast('Could not load location data');}
 }
 
