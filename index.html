@@ -1422,6 +1422,40 @@ header {
   }
 }
 
+
+/* ── HEADER LOCATION DROPDOWN PATCH ──────────────────────────────────────── */
+.role-location-select {
+  height: 34px;
+  min-width: 260px;
+  max-width: 360px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  outline: none;
+}
+
+.role-location-select:focus {
+  border-color: var(--hh-blue);
+  box-shadow: 0 0 0 3px rgba(91,155,213,.15);
+}
+
+@media(max-width:900px) {
+  .header-right {
+    flex-wrap: wrap;
+  }
+
+  .role-location-select {
+    order: -1;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1485,6 +1519,11 @@ header {
     <div class="header-right">
       <span class="rc-dot" id="rcDot" title="Firebase status"></span>
       <span class="role-badge" id="roleBadge"></span>
+      
+      <select class="role-location-select" id="headerLocSwitcherSelect" onchange="switchLocation(this.value)" style="display:none">
+        <option value="">Select location</option>
+      </select>
+
       <button class="new-quote-btn" onclick="confirmNewQuote()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New Quote
@@ -1836,8 +1875,17 @@ async function enterApp(role,locId,locData) {
   document.getElementById('editToggleWrap').style.display=canEdit?'flex':'none';
   document.getElementById('settingsBtn').style.display=(role==='owner'||role==='master')?'block':'none';
   const ls=document.getElementById('locSwitcher');
-  if(role==='master'||role==='cc'){ls.classList.add('visible');populateLocSwitcher();}
-  else ls.classList.remove('visible');
+  if(role==='master'||role==='cc'){
+    ls.classList.add('visible');
+    populateLocSwitcher();
+    const headerSel=document.getElementById('headerLocSwitcherSelect');
+    if(headerSel) headerSel.style.display='block';
+  }
+  else {
+    ls.classList.remove('visible');
+    const headerSel=document.getElementById('headerLocSwitcherSelect');
+    if(headerSel) headerSel.style.display='none';
+  }
   if(role==='owner'&&locData){
     loadLocationData(locData);
     document.getElementById('headerLocName').textContent=locData.name;
@@ -1862,9 +1910,17 @@ async function enterApp(role,locId,locData) {
 }
 
 function populateLocSwitcher(){
-  const sel=document.getElementById('locSwitcherSelect');
   const label=currentRole==='master'?'— Select location to edit —':currentRole==='cc'?'— Select location to view —':'— Select location —';
-  sel.innerHTML='<option value="">'+label+'</option>'+allLocations.map(l=>`<option value="${l.id}">${l.state} — ${l.name}</option>`).join('');
+  const opts='<option value="">'+label+'</option>'+allLocations.map(l=>`<option value="${l.id}">${l.state} — ${l.name}</option>`).join('');
+
+  const pageSel=document.getElementById('locSwitcherSelect');
+  if(pageSel) pageSel.innerHTML=opts;
+
+  const headerSel=document.getElementById('headerLocSwitcherSelect');
+  if(headerSel){
+    headerSel.innerHTML=opts;
+    headerSel.style.display=(currentRole==='master'||currentRole==='cc')?'block':'none';
+  }
 }
 
 async function switchLocation(locId){
@@ -1874,12 +1930,17 @@ async function switchLocation(locId){
   editMode=false;
   document.getElementById('editToggleWrap').style.display=canEdit?'flex':'none';
   document.getElementById('editToggle').classList.remove('on');
+  const headerSel=document.getElementById('headerLocSwitcherSelect');
+  if(headerSel){ headerSel.style.display='none'; headerSel.value=''; }
   document.body.classList.remove('can-edit');
   try{
     const res=await fsCall('get_location',locId);
     currentLocData=res.location; loadLocationData(res.location);
     document.getElementById('headerLocName').textContent=(currentRole==='master'?'Franchisor Editing: ':currentRole==='cc'?'Call Center Viewing: ':'')+res.location.name;
-    document.getElementById('locSwitcherSelect').value=locId;
+    const pageSel=document.getElementById('locSwitcherSelect');
+    if(pageSel) pageSel.value=locId;
+    const headerSel=document.getElementById('headerLocSwitcherSelect');
+    if(headerSel) headerSel.value=locId;
     showToast((currentRole==='cc'?'Viewing ':'Loaded ')+res.location.name);
   }catch(e){showToast('Could not load location data');}
 }
@@ -1899,6 +1960,8 @@ function logout(){
   document.getElementById('appShell').classList.remove('visible');
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('editToggle').classList.remove('on');
+  const headerSel=document.getElementById('headerLocSwitcherSelect');
+  if(headerSel){ headerSel.style.display='none'; headerSel.value=''; }
   document.body.classList.remove('can-edit');
   setLoginMode('location'); clearCustomer();
 }
