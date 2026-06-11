@@ -947,6 +947,17 @@
     header { padding: 0 1rem; }
     .loc-switcher { padding: 8px 1rem; }
   }
+
+.kpi-dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1080px;margin:18px auto 0;padding:0 1.5rem}
+.kpi-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 10px 40px rgba(0,0,0,.08)}
+.kpi-label{font-size:11px;text-transform:uppercase;color:var(--text-muted);font-weight:700;letter-spacing:.8px}
+.kpi-value{font-size:28px;font-weight:800;margin-top:8px}
+.brand-hero{max-width:1080px;margin:18px auto;padding:24px;border-radius:18px;background:linear-gradient(135deg,#0b1c35,#16345f);color:white;box-shadow:0 12px 50px rgba(0,0,0,.15)}
+.brand-hero h1{font-size:32px;margin:0}
+.brand-hero p{opacity:.8;margin-top:6px}
+.customer-panel,.size-sel,.svc-panel,.quote-card{border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.08)}
+@media(max-width:800px){.kpi-dashboard{grid-template-columns:repeat(2,1fr)}}
+
 </style>
 </head>
 <body>
@@ -1027,7 +1038,20 @@
     </div>
   </header>
 
-  <div class="loc-switcher" id="locSwitcher">
+  
+<div class="brand-hero">
+  <h1>WINDOW HERO Pricing & Estimation Platform</h1>
+  <p>Enterprise Franchise Dashboard • Quote Management • Sales Performance</p>
+</div>
+
+<div class="kpi-dashboard">
+  <div class="kpi-card"><div class="kpi-label">Quotes Today</div><div class="kpi-value">23</div></div>
+  <div class="kpi-card"><div class="kpi-label">Conversion Rate</div><div class="kpi-value">47%</div></div>
+  <div class="kpi-card"><div class="kpi-label">Average Ticket</div><div class="kpi-value">$842</div></div>
+  <div class="kpi-card"><div class="kpi-label">Revenue Pipeline</div><div class="kpi-value">$18.2k</div></div>
+</div>
+
+<div class="loc-switcher" id="locSwitcher">
     <label>Viewing:</label>
     <select id="locSwitcherSelect" onchange="switchLocation(this.value)">
       <option value="">— Select location —</option>
