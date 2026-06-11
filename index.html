@@ -187,18 +187,24 @@
   .btn-sec { background: white; color: var(--navy); border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 9px 12px; font-size: 13px; cursor: pointer; }
   .btn-sec:hover { background: var(--grey-pale); }
 
-  /* PIN CHANGE PANEL */
-  .pin-change-panel { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 1.25rem; margin-bottom: 1.25rem; display: none; }
-  .pin-change-panel.visible { display: block; }
-  .pin-fields { display: flex; flex-direction: column; gap: 8px; }
+  /* PIN CHANGE (modal only) */
+  .pin-fields { display: flex; flex-direction: column; gap: 12px; }
   .pin-field { display: flex; flex-direction: column; gap: 4px; }
   .pin-field label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--grey); }
-  .pin-field input { height: 36px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 0 10px; font-size: 20px; letter-spacing: 8px; color: var(--navy); outline: none; max-width: 160px; }
-  .pin-field input:focus { border-color: var(--blue); }
-  .pin-save-btn { margin-top: 8px; background: var(--navy); color: white; border: none; border-radius: var(--radius-sm); padding: 9px 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
-  .pin-msg { font-size: 12px; margin-top: 6px; }
+  .pin-field input { height: 40px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 0 10px; font-size: 22px; letter-spacing: 10px; color: var(--navy); outline: none; max-width: 180px; }
+  .pin-field input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(91,155,213,0.15); }
+  .pin-save-btn { width: 100%; background: var(--navy); color: white; border: none; border-radius: var(--radius-sm); padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 4px; }
+  .pin-save-btn:hover { background: var(--navy-light); }
+  .pin-msg { font-size: 12px; margin-top: 6px; text-align: center; }
   .pin-msg.ok { color: var(--success); }
   .pin-msg.err { color: var(--danger); }
+
+  /* FIRST LOGIN MODAL */
+  .first-login-badge { background: #f0c040; color: #5a3c00; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 10px; }
+
+  /* GEAR BUTTON */
+  .gear-btn { background: rgba(255,255,255,0.1); color: white; border: none; border-radius: var(--radius-sm); padding: 6px 10px; font-size: 16px; cursor: pointer; line-height: 1; }
+  .gear-btn:hover { background: rgba(255,255,255,0.18); }
 
   /* MODALS */
   .backdrop { position: fixed; inset: 0; background: rgba(11,28,53,0.55); z-index: 200; display: none; align-items: center; justify-content: center; }
@@ -312,6 +318,7 @@
         <span>Edit</span>
         <div class="toggle-switch" id="editToggle"></div>
       </label>
+      <button class="gear-btn" id="settingsBtn" onclick="openSettings()" title="Settings" style="display:none">⚙️</button>
       <button class="header-btn" onclick="logout()">Sign out</button>
     </div>
   </header>
@@ -349,27 +356,6 @@
           <div class="history-lbl">Past Services</div>
           <div id="historyList"></div>
         </div>
-      </div>
-
-      <!-- PIN Change (owner/master only) -->
-      <div class="pin-change-panel" id="pinChangePanel">
-        <div class="section-label">Change Location PIN</div>
-        <div class="pin-fields">
-          <div class="pin-field" id="currentPinWrap">
-            <label>Current PIN</label>
-            <input type="password" id="currentPin" maxlength="4" placeholder="••••" inputmode="numeric" />
-          </div>
-          <div class="pin-field">
-            <label>New PIN</label>
-            <input type="password" id="newPin" maxlength="4" placeholder="••••" inputmode="numeric" />
-          </div>
-          <div class="pin-field">
-            <label>Confirm New PIN</label>
-            <input type="password" id="confirmPin" maxlength="4" placeholder="••••" inputmode="numeric" />
-          </div>
-        </div>
-        <button class="pin-save-btn" onclick="changePin()">Update PIN</button>
-        <div class="pin-msg" id="pinMsg"></div>
       </div>
 
       <!-- Size Selector -->
@@ -440,9 +426,69 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- First Login PIN Change Modal (forced) -->
+<div class="backdrop open" id="modalFirstLogin" style="display:none;z-index:300">
+  <div class="modal">
+    <div class="m-hdr">
+      <div class="m-title">Welcome to Window Hero Pricing</div>
+      <div class="m-sub">Please set a private PIN before continuing</div>
+    </div>
+    <div class="m-body">
+      <div class="first-login-badge">Action Required</div>
+      <p>You're logged in with the default PIN. For security, please choose a new 4-digit PIN now. You'll use this to log in from any device.</p>
+      <div class="pin-fields">
+        <div class="pin-field">
+          <label>New PIN</label>
+          <input type="password" id="firstNewPin" maxlength="4" placeholder="••••" inputmode="numeric" />
+        </div>
+        <div class="pin-field">
+          <label>Confirm PIN</label>
+          <input type="password" id="firstConfirmPin" maxlength="4" placeholder="••••" inputmode="numeric" />
+        </div>
+      </div>
+      <div class="pin-msg" id="firstPinMsg"></div>
+    </div>
+    <div class="m-actions">
+      <button class="m-btn-pri" onclick="saveFirstPin()">Set My PIN</button>
+    </div>
+  </div>
+</div>
 
-<!-- Firebase -->
+<!-- Settings Modal -->
+<div class="backdrop" id="modalSettings">
+  <div class="modal">
+    <div class="m-hdr">
+      <div class="m-title">Settings</div>
+      <div class="m-sub" id="settingsLocName"></div>
+    </div>
+    <div class="m-body">
+      <p style="font-weight:600;font-size:13px;margin-bottom:12px;color:var(--navy)">Change Location PIN</p>
+      <div class="pin-fields">
+        <div class="pin-field" id="settingsCurrentWrap">
+          <label>Current PIN</label>
+          <input type="password" id="settingsCurrentPin" maxlength="4" placeholder="••••" inputmode="numeric" />
+        </div>
+        <div class="pin-field">
+          <label>New PIN</label>
+          <input type="password" id="settingsNewPin" maxlength="4" placeholder="••••" inputmode="numeric" />
+        </div>
+        <div class="pin-field">
+          <label>Confirm New PIN</label>
+          <input type="password" id="settingsConfirmPin" maxlength="4" placeholder="••••" inputmode="numeric" />
+        </div>
+      </div>
+      <div class="pin-msg" id="settingsPinMsg"></div>
+    </div>
+    <div class="m-actions">
+      <button class="m-btn-sec" onclick="closeModal('modalSettings')">Cancel</button>
+      <button class="m-btn-pri" onclick="saveSettingsPin()">Update PIN</button>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="toast" id="toast"></div>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getRemoteConfig, fetchAndActivate, getValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-remote-config.js';
@@ -613,16 +659,17 @@ async function enterApp(role, locId, locData) {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appShell').classList.add('visible');
 
-  // Role badge
   const rb = document.getElementById('roleBadge');
   rb.className = 'role-badge ' + role;
   rb.textContent = role === 'master' ? 'Franchisor' : role === 'cc' ? 'Call Center' : 'Owner';
 
-  // Edit toggle
   const etw = document.getElementById('editToggleWrap');
   etw.style.display = canEdit ? 'flex' : 'none';
 
-  // Location switcher for master/cc
+  // Settings gear — visible for owner and master
+  const settingsBtn = document.getElementById('settingsBtn');
+  settingsBtn.style.display = (role === 'owner' || role === 'master') ? 'block' : 'none';
+
   const ls = document.getElementById('locSwitcher');
   if (role === 'master' || role === 'cc') {
     ls.classList.add('visible');
@@ -631,27 +678,19 @@ async function enterApp(role, locId, locData) {
     ls.classList.remove('visible');
   }
 
-  // PIN change panel — owner and master
-  const pcp = document.getElementById('pinChangePanel');
-  if (role === 'owner') {
-    pcp.classList.add('visible');
-    document.getElementById('currentPinWrap').style.display = 'flex';
-  } else if (role === 'master') {
-    pcp.classList.add('visible');
-    document.getElementById('currentPinWrap').style.display = 'none'; // master skips current pin check
-  } else {
-    pcp.classList.remove('visible');
-  }
-
   if (role === 'owner' && locData) {
     loadLocationData(locData);
     document.getElementById('headerLocName').textContent = '· ' + locData.name;
+    // Show first-login modal if still on default PIN
+    if (pinBuffer === '1234') {
+      document.getElementById('firstPinMsg').textContent = '';
+      document.getElementById('firstNewPin').value = '';
+      document.getElementById('firstConfirmPin').value = '';
+      document.getElementById('modalFirstLogin').style.display = 'flex';
+    }
   } else if (role === 'master' || role === 'cc') {
     document.getElementById('headerLocName').textContent = '';
-    // Load first location by default
-    if (allLocations.length > 0) {
-      await switchLocation(allLocations[0].id);
-    }
+    if (allLocations.length > 0) await switchLocation(allLocations[0].id);
   }
 }
 
@@ -749,30 +788,62 @@ async function savePrices() {
   } catch(e) { showToast('Save failed — ' + e.message); }
 }
 
-// ── PIN CHANGE ──────────────────────────────────────────────────────────────
+// ── SETTINGS & PIN CHANGE ──────────────────────────────────────────────────
 
-async function changePin() {
-  const newPin = document.getElementById('newPin').value.trim();
-  const confirmPin = document.getElementById('confirmPin').value.trim();
-  const msg = document.getElementById('pinMsg');
+function openSettings() {
+  const locName = currentLocData ? currentLocData.name : '';
+  document.getElementById('settingsLocName').textContent = locName;
+  document.getElementById('settingsPinMsg').textContent = '';
+  document.getElementById('settingsCurrentPin').value = '';
+  document.getElementById('settingsNewPin').value = '';
+  document.getElementById('settingsConfirmPin').value = '';
+  // Master skips current PIN field
+  document.getElementById('settingsCurrentWrap').style.display = currentRole === 'master' ? 'none' : 'flex';
+  document.getElementById('modalSettings').classList.add('open');
+}
 
+async function saveSettingsPin() {
+  const newPin = document.getElementById('settingsNewPin').value.trim();
+  const confirmPin = document.getElementById('settingsConfirmPin').value.trim();
+  const msg = document.getElementById('settingsPinMsg');
   if (!/^\d{4}$/.test(newPin)) { msg.className='pin-msg err'; msg.textContent='PIN must be exactly 4 digits'; return; }
   if (newPin !== confirmPin) { msg.className='pin-msg err'; msg.textContent='PINs do not match'; return; }
-
   try {
     let res;
     if (currentRole === 'master') {
       res = await fsCall('master_change_pin', currentLocId, { newPin });
     } else {
-      const currentPin = document.getElementById('currentPin').value.trim();
+      const currentPin = document.getElementById('settingsCurrentPin').value.trim();
       if (!currentPin) { msg.className='pin-msg err'; msg.textContent='Enter your current PIN'; return; }
       res = await fsCall('change_pin', currentLocId, { currentPin, newPin });
     }
     if (res.success) {
       msg.className='pin-msg ok'; msg.textContent='PIN updated successfully';
-      ['currentPin','newPin','confirmPin'].forEach(id => document.getElementById(id).value='');
+      setTimeout(() => closeModal('modalSettings'), 1500);
+      showToast('PIN updated');
     } else {
       msg.className='pin-msg err'; msg.textContent = res.error || 'Could not update PIN';
+    }
+  } catch(e) { msg.className='pin-msg err'; msg.textContent='Error: '+e.message; }
+}
+
+async function saveFirstPin() {
+  const newPin = document.getElementById('firstNewPin').value.trim();
+  const confirmPin = document.getElementById('firstConfirmPin').value.trim();
+  const msg = document.getElementById('firstPinMsg');
+  if (!/^\d{4}$/.test(newPin)) { msg.className='pin-msg err'; msg.textContent='PIN must be exactly 4 digits'; return; }
+  if (newPin === '1234') { msg.className='pin-msg err'; msg.textContent='Please choose a different PIN than the default'; return; }
+  if (newPin !== confirmPin) { msg.className='pin-msg err'; msg.textContent='PINs do not match'; return; }
+  try {
+    const res = await fsCall('change_pin', currentLocId, { currentPin: '1234', newPin });
+    if (res.success) {
+      msg.className='pin-msg ok'; msg.textContent='PIN set successfully!';
+      setTimeout(() => {
+        document.getElementById('modalFirstLogin').style.display = 'none';
+        showToast('PIN set — you\'re all set!');
+      }, 1200);
+    } else {
+      msg.className='pin-msg err'; msg.textContent = res.error || 'Could not set PIN';
     }
   } catch(e) { msg.className='pin-msg err'; msg.textContent='Error: '+e.message; }
 }
