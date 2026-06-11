@@ -1456,6 +1456,73 @@ header {
   }
 }
 
+
+/* ── REQUIRED ROLE LOCATION PICKER ───────────────────────────────────────── */
+.role-location-panel {
+  max-width: 1180px;
+  margin: 18px auto 0;
+  padding: 18px 20px;
+  border: 2px solid var(--hh-blue);
+  border-radius: 18px;
+  background: var(--bg-card);
+  box-shadow: 0 14px 44px rgba(11,28,53,.14);
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(280px,420px);
+  gap: 18px;
+  align-items: center;
+}
+
+.role-location-eyebrow {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  color: var(--hh-blue);
+  margin-bottom: 5px;
+}
+
+.role-location-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: -.3px;
+}
+
+.role-location-help {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.role-location-panel select {
+  height: 48px;
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 800;
+  outline: none;
+}
+
+.role-location-panel select:focus {
+  border-color: var(--hh-blue);
+  box-shadow: 0 0 0 4px rgba(91,155,213,.18);
+}
+
+[data-theme="dark"] .role-location-panel {
+  background: var(--bg-card);
+}
+
+@media(max-width:760px) {
+  .role-location-panel {
+    margin: 14px 1rem 0;
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1569,6 +1636,19 @@ header {
   <div class="manager-card"><h3>Follow-Up Queue</h3><p>8 open estimates should be followed up within 48 hours.</p></div>
   <div class="manager-card"><h3>Sales Focus</h3><p>Bundle window cleaning with house washing to lift average ticket value.</p></div>
 </div>
+
+
+
+  <div class="role-location-panel" id="roleLocationPanel" style="display:none">
+    <div>
+      <div class="role-location-eyebrow" id="roleLocationEyebrow">Location Access</div>
+      <div class="role-location-title" id="roleLocationTitle">Select a location</div>
+      <div class="role-location-help" id="roleLocationHelp">Choose the franchise location you want to work with.</div>
+    </div>
+    <select id="roleLocationSelect" onchange="switchLocation(this.value)">
+      <option value="">Loading locations...</option>
+    </select>
+  </div>
 
 
   <div class="main">
@@ -1878,11 +1958,13 @@ async function enterApp(role,locId,locData) {
   if(role==='master'||role==='cc'){
     ls.classList.add('visible');
     populateLocSwitcher();
+    updateRoleLocationPanel();
     const headerSel=document.getElementById('headerLocSwitcherSelect');
     if(headerSel) headerSel.style.display='block';
   }
   else {
     ls.classList.remove('visible');
+    updateRoleLocationPanel();
     const headerSel=document.getElementById('headerLocSwitcherSelect');
     if(headerSel) headerSel.style.display='none';
   }
@@ -1910,7 +1992,9 @@ async function enterApp(role,locId,locData) {
 }
 
 function populateLocSwitcher(){
-  const label=currentRole==='master'?'— Select location to edit —':currentRole==='cc'?'— Select location to view —':'— Select location —';
+  const isMaster=currentRole==='master';
+  const isCC=currentRole==='cc';
+  const label=isMaster?'— Select location to edit —':isCC?'— Select location to view —':'— Select location —';
   const opts='<option value="">'+label+'</option>'+allLocations.map(l=>`<option value="${l.id}">${l.state} — ${l.name}</option>`).join('');
 
   const pageSel=document.getElementById('locSwitcherSelect');
@@ -1919,8 +2003,38 @@ function populateLocSwitcher(){
   const headerSel=document.getElementById('headerLocSwitcherSelect');
   if(headerSel){
     headerSel.innerHTML=opts;
-    headerSel.style.display=(currentRole==='master'||currentRole==='cc')?'block':'none';
+    headerSel.style.display=(isMaster||isCC)?'block':'none';
   }
+
+  const roleSel=document.getElementById('roleLocationSelect');
+  if(roleSel) roleSel.innerHTML=opts;
+
+  updateRoleLocationPanel();
+}
+
+
+function updateRoleLocationPanel(){
+  const panel=document.getElementById('roleLocationPanel');
+  if(!panel)return;
+  const isMaster=currentRole==='master';
+  const isCC=currentRole==='cc';
+  panel.style.display=(isMaster||isCC)?'grid':'none';
+  if(isMaster){
+    document.getElementById('roleLocationEyebrow').textContent='Franchisor Location Access';
+    document.getElementById('roleLocationTitle').textContent='Select a location to edit';
+    document.getElementById('roleLocationHelp').textContent='Franchisor access can edit pricing for the selected franchise location.';
+  }else if(isCC){
+    document.getElementById('roleLocationEyebrow').textContent='Call Center Location Access';
+    document.getElementById('roleLocationTitle').textContent='Select a location to view';
+    document.getElementById('roleLocationHelp').textContent='Call Center access can create quotes and view pricing, but cannot edit pricing.';
+  }
+}
+
+function syncLocationSelectors(locId){
+  ['locSwitcherSelect','headerLocSwitcherSelect','roleLocationSelect'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.value=locId||'';
+  });
 }
 
 async function switchLocation(locId){
@@ -1932,15 +2046,15 @@ async function switchLocation(locId){
   document.getElementById('editToggle').classList.remove('on');
   const headerSel=document.getElementById('headerLocSwitcherSelect');
   if(headerSel){ headerSel.style.display='none'; headerSel.value=''; }
+  const rolePanel=document.getElementById('roleLocationPanel');
+  if(rolePanel)rolePanel.style.display='none';
+  syncLocationSelectors('');
   document.body.classList.remove('can-edit');
   try{
     const res=await fsCall('get_location',locId);
     currentLocData=res.location; loadLocationData(res.location);
     document.getElementById('headerLocName').textContent=(currentRole==='master'?'Franchisor Editing: ':currentRole==='cc'?'Call Center Viewing: ':'')+res.location.name;
-    const pageSel=document.getElementById('locSwitcherSelect');
-    if(pageSel) pageSel.value=locId;
-    const headerSel=document.getElementById('headerLocSwitcherSelect');
-    if(headerSel) headerSel.value=locId;
+    syncLocationSelectors(locId);
     showToast((currentRole==='cc'?'Viewing ':'Loaded ')+res.location.name);
   }catch(e){showToast('Could not load location data');}
 }
@@ -1962,6 +2076,9 @@ function logout(){
   document.getElementById('editToggle').classList.remove('on');
   const headerSel=document.getElementById('headerLocSwitcherSelect');
   if(headerSel){ headerSel.style.display='none'; headerSel.value=''; }
+  const rolePanel=document.getElementById('roleLocationPanel');
+  if(rolePanel)rolePanel.style.display='none';
+  syncLocationSelectors('');
   document.body.classList.remove('can-edit');
   setLoginMode('location'); clearCustomer();
 }
@@ -1989,6 +2106,7 @@ async function loadAllLocations(){
       opts+='</optgroup>';
     });
     sel.innerHTML=opts;
+    if(currentRole==='master'||currentRole==='cc')populateLocSwitcher();
   }catch(e){console.error('Could not load locations',e);}
 }
 
